@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="{{ asset('img/RPL.png') }}" alt="Logo RPL" width="200"/>
+  <img src="{{ asset('img/RPL.png') }}" alt="Logo RPL" width="200" />
 </p>
 
 <h1 align="center" style="color:#4A4A4A;">PROJEK E - KASIR</h1>
