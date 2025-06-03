@@ -1,5 +1,6 @@
 <p align="center">
-  <img src="public/img/RPL.png" alt="Logo RPL" width="200" style="border-radius: 50%;" />
+  <img src="public/img/RPL.png" alt="Logo RPL" 
+       style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover;" />
 </p>
 
 <h1 align="center" style="color:#4A4A4A;">PROJEK E - KASIR</h1>
@@ -42,17 +43,46 @@
 ### 📷 Tampilan Aplikasi
 
 <p align="center">
-  <img src="public/img/home.png" width="250" style="margin: 10px;" />
-  <img src="public/img/dashboard.png" width="250" style="margin: 10px;" />
-  <img src="public/img/produk.png" width="250" style="margin: 10px;" />
+  <div style="display: inline-block; text-align: center; margin: 10px;">
+    <img src="public/img/home.png" width="250" />
+    <div>Home</div>
+  </div>
+  <div style="display: inline-block; text-align: center; margin: 10px;">
+    <img src="public/img/dashboard.png" width="250" />
+    <div>Dashboard</div>
+  </div>
+  <div style="display: inline-block; text-align: center; margin: 10px;">
+    <img src="public/img/produk.png" width="250" />
+    <div>Produk</div>
+  </div>
 </p>
+
 <p align="center">
-  <img src="public/img/kategori.png" width="250" style="margin: 10px;" />
-  <img src="public/img/diskon.png" width="250" style="margin: 10px;" />
-  <img src="public/img/admin.png" width="250" style="margin: 10px;" />
+  <div style="display: inline-block; text-align: center; margin: 10px;">
+    <img src="public/img/kategori.png" width="250" />
+    <div>Kategori</div>
+  </div>
+  <div style="display: inline-block; text-align: center; margin: 10px;">
+    <img src="public/img/diskon.png" width="250" />
+    <div>Diskon</div>
+  </div>
+  <div style="display: inline-block; text-align: center; margin: 10px;">
+    <img src="public/img/admin.png" width="250" />
+    <div>Admin</div>
+  </div>
 </p>
+
 <p align="center">
-  <img src="public/img/member.png" width="250" style="margin: 10px;" />
-  <img src="public/img/cart.png" width="250" style="margin: 10px;" />
-  <img src="public/img/riwayat_transaksi.png" width="250" style="margin: 10px;" />
+  <div style="display: inline-block; text-align: center; margin: 10px;">
+    <img src="public/img/member.png" width="250" />
+    <div>Member</div>
+  </div>
+  <div style="display: inline-block; text-align: center; margin: 10px;">
+    <img src="public/img/cart.png" width="250" />
+    <div>Keranjang</div>
+  </div>
+  <div style="display: inline-block; text-align: center; margin: 10px;">
+    <img src="public/img/riwayat_transaksi.png" width="250" />
+    <div>Riwayat Transaksi</div>
+  </div>
 </p>
