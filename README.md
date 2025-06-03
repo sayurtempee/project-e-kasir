@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/img/RPL.png" alt="Logo RPL" width="200" />
+  <img src="public/img/RPL.png" alt="Logo RPL" width="200" style="border-radius: 50%;" />
 </p>
 
 <h1 align="center" style="color:#4A4A4A;">PROJEK E - KASIR</h1>
@@ -41,4 +41,18 @@
 
 ### 📷 Tampilan Aplikasi
 
-> (Tambahkan screenshot aplikasi Anda di bagian ini)
+<p align="center">
+  <img src="public/img/home.png" width="250" style="margin: 10px;" />
+  <img src="public/img/dashboard.png" width="250" style="margin: 10px;" />
+  <img src="public/img/produk.png" width="250" style="margin: 10px;" />
+</p>
+<p align="center">
+  <img src="public/img/kategori.png" width="250" style="margin: 10px;" />
+  <img src="public/img/diskon.png" width="250" style="margin: 10px;" />
+  <img src="public/img/admin.png" width="250" style="margin: 10px;" />
+</p>
+<p align="center">
+  <img src="public/img/member.png" width="250" style="margin: 10px;" />
+  <img src="public/img/cart.png" width="250" style="margin: 10px;" />
+  <img src="public/img/riwayat_transaksi.png" width="250" style="margin: 10px;" />
+</p>
