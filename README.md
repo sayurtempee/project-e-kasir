@@ -1,6 +1,6 @@
 <p align="center">
   <img src="public/img/RPL.png" alt="Logo RPL" 
-       style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover;" />
+       style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; display: block; margin: 0 auto;" />
 </p>
 
 <h1 align="center" style="color:#4A4A4A;">PROJEK E - KASIR</h1>
@@ -15,7 +15,7 @@
 
 -   **Nama** : FARIS HILMI AL - IZA
 -   **Kelas** : XI RPL 2
--   **Jurusan**: REKAYASA PERANGKAT LUNAK
+-   **Jurusan** : REKAYASA PERANGKAT LUNAK
 
 ---
 
@@ -42,47 +42,14 @@
 
 ### 📷 Tampilan Aplikasi
 
-<div style="text-align: center;">
-  <div style="display: inline-block; text-align: center; margin: 10px;">
-    <img src="public/img/home.png" width="250" />
-    <div>Home</div>
-  </div>
-  <div style="display: inline-block; text-align: center; margin: 10px;">
-    <img src="public/img/dashboard.png" width="250" />
-    <div>Dashboard</div>
-  </div>
-  <div style="display: inline-block; text-align: center; margin: 10px;">
-    <img src="public/img/produk.png" width="250" />
-    <div>Produk</div>
-  </div>
-</div>
+| Home                         | Dashboard                              | Produk                           |
+| ---------------------------- | -------------------------------------- | -------------------------------- |
+| ![Home](public/img/home.png) | ![Dashboard](public/img/dashboard.png) | ![Produk](public/img/produk.png) |
 
-<div style="text-align: center;">
-  <div style="display: inline-block; text-align: center; margin: 10px;">
-    <img src="public/img/kategori.png" width="250" />
-    <div>Kategori</div>
-  </div>
-  <div style="display: inline-block; text-align: center; margin: 10px;">
-    <img src="public/img/diskon.png" width="250" />
-    <div>Diskon</div>
-  </div>
-  <div style="display: inline-block; text-align: center; margin: 10px;">
-    <img src="public/img/admin.png" width="250" />
-    <div>Admin</div>
-  </div>
-</div>
+| Kategori                             | Diskon                           | Admin                          |
+| ------------------------------------ | -------------------------------- | ------------------------------ |
+| ![Kategori](public/img/kategori.png) | ![Diskon](public/img/diskon.png) | ![Admin](public/img/admin.png) |
 
-<div style="text-align: center;">
-  <div style="display: inline-block; text-align: center; margin: 10px;">
-    <img src="public/img/member.png" width="250" />
-    <div>Member</div>
-  </div>
-  <div style="display: inline-block; text-align: center; margin: 10px;">
-    <img src="public/img/cart.png" width="250" />
-    <div>Keranjang</div>
-  </div>
-  <div style="display: inline-block; text-align: center; margin: 10px;">
-    <img src="public/img/riwayat_transaksi.png" width="250" />
-    <div>Riwayat Transaksi</div>
-  </div>
-</div>
+| Member                           | Keranjang                         | Riwayat Transaksi                                      |
+| -------------------------------- | --------------------------------- | ------------------------------------------------------ |
+| ![Member](public/img/member.png) | ![Keranjang](public/img/cart.png) | ![Riwayat Transaksi](public/img/riwayat_transaksi.png) |
