@@ -42,7 +42,7 @@
 
 ### 📷 Tampilan Aplikasi
 
-<p align="center">
+<div style="text-align: center;">
   <div style="display: inline-block; text-align: center; margin: 10px;">
     <img src="public/img/home.png" width="250" />
     <div>Home</div>
@@ -55,9 +55,9 @@
     <img src="public/img/produk.png" width="250" />
     <div>Produk</div>
   </div>
-</p>
+</div>
 
-<p align="center">
+<div style="text-align: center;">
   <div style="display: inline-block; text-align: center; margin: 10px;">
     <img src="public/img/kategori.png" width="250" />
     <div>Kategori</div>
@@ -70,9 +70,9 @@
     <img src="public/img/admin.png" width="250" />
     <div>Admin</div>
   </div>
-</p>
+</div>
 
-<p align="center">
+<div style="text-align: center;">
   <div style="display: inline-block; text-align: center; margin: 10px;">
     <img src="public/img/member.png" width="250" />
     <div>Member</div>
@@ -85,4 +85,4 @@
     <img src="public/img/riwayat_transaksi.png" width="250" />
     <div>Riwayat Transaksi</div>
   </div>
-</p>
+</div>
