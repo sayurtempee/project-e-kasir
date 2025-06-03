@@ -3,10 +3,12 @@
        style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; display: block; margin: 0 auto;" />
 </p>
 
-<h1 align="center" style="color:#4A4A4A;">PROJEK E - KASIR</h1>
+<h1 align="center" style="font-weight: bold;">
+  <span style="color:#E53935;">PROYEK</span> <span style="color:#4A4A4A;">E-KASIR</span>
+</h1>
 
 <p align="center" style="color:#808080;">
-  Sistem kasir digital yang dibuat untuk memudahkan proses transaksi di toko modern maupun UMKM.
+  Sistem kasir digital yang dirancang untuk mempermudah proses transaksi pada toko modern maupun UMKM.
 </p>
 
 ---
