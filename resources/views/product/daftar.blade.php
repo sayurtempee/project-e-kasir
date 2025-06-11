@@ -34,7 +34,7 @@
             <!-- Tombol Tambah Produk -->
             <div class="flex justify-end mb-4">
                 <a href="{{ route('product.create') }}"
-                    class="font-semibold py-2 px-4 rounded-lg transition duration-300 
+                    class="font-semibold py-2 px-4 rounded-lg transition duration-300
                        bg-[#1E3A8A] text-white hover:bg-blue-950 hover:border-black hover:text-black">
                     Tambah Produk
                 </a>
@@ -50,7 +50,7 @@
                         Cari
                     </button>
                     <button type="button" onclick="startBarcodeScanner()"
-                        class="bg-green-600 text-white px-4 py-2 rounded-lg 
+                        class="bg-green-600 text-white px-4 py-2 rounded-lg
                         hover:bg-green-800 hover:text-gray-300 transition duration-300 flex items-center space-x-2">
                         <span>Scan Barcode</span>
                     </button>
@@ -104,6 +104,38 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-3 flex flex-col space-y-1">
+                                    <button type="button" onclick="toggleModal('modalDetail-{{ $product->id }}')"
+                                        class="flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-1 rounded transition w-full">
+                                        <i class="fas fa-eye mr-1 text-base"></i>
+                                        <span class="text-sm">Lihat</span>
+                                    </button>
+                                    {{--  Modal detail  --}}
+                                    <!-- Modal Detail Produk -->
+                                    <div id="modalDetail-{{ $product->id }}"
+                                        class="fixed inset-0 z-50 bg-black bg-opacity-50 hidden items-center justify-center">
+                                        <div class="bg-white rounded-xl shadow-lg w-full max-w-lg p-8 relative">
+                                            <!-- Tombol Close -->
+                                            <button onclick="toggleModal('modalDetail-{{ $product->id }}')"
+                                                class="absolute top-4 right-4 text-gray-500 hover:text-black text-2xl font-bold">
+                                                &times;
+                                            </button>
+                                            <!-- Konten Detail -->
+                                            <h2 class="text-2xl font-semibold text-indigo-600 mb-6">Detail Produk</h2>
+                                            <div class="space-y-3 text-[1.25rem]">
+                                                <div class="relative w-[300px] h-0 pb-[300px] mx-auto">
+                                                    <img src="{{ Storage::url($product->img) }}"
+                                                        alt="{{ $product->name }}"
+                                                        class="absolute inset-0 w-full h-full object-cover rounded shadow" />
+                                                </div>
+                                                <p><strong>Nama Produk:</strong> {{ $product->name }}</p>
+                                                <p><strong>Harga:</strong>
+                                                    Rp{{ number_format($product->price, 0, ',', '.') }}</p>
+                                                <p><strong>Stok:</strong> {{ $product->stock }}</p>
+                                                <p><strong>Kategori:</strong> {{ $product->category->name ?? '-' }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{--  end modal-detail  --}}
                                     <a href="{{ route('product.edit', $product->id) }}"
                                         class="flex items-center justify-center bg-yellow-400 text-black font-semibold px-2 py-1 rounded hover:bg-yellow-500 transition">
                                         <i class="fas fa-edit mr-1 text-base"></i> <span class="text-sm">Edit</span>
@@ -113,8 +145,8 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
-                                            class="w-full flex items-center justify-center 
-                                            {{ $product->stock > 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600' }} 
+                                            class="w-full flex items-center justify-center
+                                            {{ $product->stock > 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600' }}
                                             text-white font-semibold px-2 py-1 rounded transition"
                                             {{ $product->stock > 0 ? 'disabled' : '' }}>
                                             <i class="fas fa-trash-alt mr-1 text-base"></i>
@@ -282,6 +314,14 @@
                         });
                     });
             });
+        }
+
+        function toggleModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.toggle('hidden');
+                modal.classList.toggle('flex');
+            }
         }
     </script>
 </body>
