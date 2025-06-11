@@ -119,10 +119,10 @@
                                             <!-- Konten Detail -->
                                             <h2 class="text-2xl font-semibold text-indigo-600 mb-6">Detail Produk</h2>
                                             <div class="space-y-3 text-[1.25rem]">
-                                                <div class="relative w-[300px] h-0 pb-[300px] mx-auto">
+                                                <div class="relative w-[300px] h-0 pb-[300px] mx-auto group">
                                                     <img src="<?php echo e(Storage::url($product->img)); ?>"
                                                         alt="<?php echo e($product->name); ?>"
-                                                        class="absolute inset-0 w-full h-full object-cover rounded shadow" />
+                                                        class="absolute inset-0 w-full h-full object-cover rounded shadow transition-transform duration-300 group-hover:scale-110" />
                                                 </div>
                                                 <p><strong>Nama Produk:</strong> <?php echo e($product->name); ?></p>
                                                 <p><strong>Harga:</strong>
