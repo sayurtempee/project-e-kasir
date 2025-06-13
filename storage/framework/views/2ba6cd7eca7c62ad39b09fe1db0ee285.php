@@ -106,29 +106,41 @@
                                         <i class="fas fa-eye mr-1 text-base"></i>
                                         <span class="text-sm">Lihat</span>
                                     </button>
-                                    
                                     <!-- Modal Detail Produk -->
                                     <div id="modalDetail-<?php echo e($product->id); ?>"
-                                        class="fixed inset-0 z-50 bg-black bg-opacity-50 hidden items-center justify-center">
-                                        <div class="bg-white rounded-xl shadow-lg w-full max-w-lg p-8 relative">
+                                        class="fixed inset-0 z-50 bg-black bg-opacity-50 hidden items-center justify-center min-h-screen px-4 py-6 overflow-y-auto">
+
+                                        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg p-8 relative">
                                             <!-- Tombol Close -->
                                             <button onclick="toggleModal('modalDetail-<?php echo e($product->id); ?>')"
                                                 class="absolute top-4 right-4 text-gray-500 hover:text-black text-2xl font-bold">
                                                 &times;
                                             </button>
-                                            <!-- Konten Detail -->
-                                            <h2 class="text-2xl font-semibold text-indigo-600 mb-6">Detail Produk</h2>
-                                            <div class="space-y-3 text-[1.25rem]">
-                                                <div class="relative w-[300px] h-0 pb-[300px] mx-auto group">
+
+                                            <!-- Judul -->
+                                            <h2 class="text-2xl font-semibold text-indigo-600 mb-6 text-center">Detail
+                                                Produk</h2>
+
+                                            <!-- Isi Detail Produk -->
+                                            <div class="space-y-4 text-base text-gray-800">
+                                                <!-- Gambar -->
+                                                <div
+                                                    class="relative w-[300px] h-[300px] mx-auto group overflow-hidden rounded-xl shadow-md">
                                                     <img src="<?php echo e(Storage::url($product->img)); ?>"
                                                         alt="<?php echo e($product->name); ?>"
-                                                        class="absolute inset-0 w-full h-full object-cover rounded shadow transition-transform duration-300 group-hover:scale-110" />
+                                                        class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
                                                 </div>
-                                                <p><strong>Nama Produk:</strong> <?php echo e($product->name); ?></p>
-                                                <p><strong>Harga:</strong>
-                                                    Rp<?php echo e(number_format($product->price, 0, ',', '.')); ?></p>
-                                                <p><strong>Stok:</strong> <?php echo e($product->stock); ?></p>
-                                                <p><strong>Kategori:</strong> <?php echo e($product->category->name ?? '-'); ?></p>
+
+                                                <!-- Informasi Produk -->
+                                                <div class="space-y-2 px-4">
+                                                    <p><strong>Nama Produk:</strong> <?php echo e($product->name); ?></p>
+                                                    <p><strong>Harga:</strong>
+                                                        Rp<?php echo e(number_format($product->price, 0, ',', '.')); ?></p>
+                                                    <p><strong>Stok:</strong> <?php echo e($product->stock); ?></p>
+                                                    <p><strong>Kategori:</strong> <?php echo e($product->category->name ?? '-'); ?>
+
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
