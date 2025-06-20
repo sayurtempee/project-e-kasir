@@ -101,6 +101,11 @@
                         </tbody>
                     </table>
                 </div>
+                
+                <div class="mt-4 justify-center">
+                    <?php echo e($transactions->onEachSide(1)->links('vendor.pagination.simple-numbers')); ?>
+
+                </div>
             <?php else: ?>
                 
                 <p class="text-white">Tidak ada transaksi yang ditemukan.</p>
