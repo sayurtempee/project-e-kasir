@@ -41,7 +41,7 @@ class TransactionController extends Controller
             $query->whereDate('created_at', $date);
         }
 
-        $transactions = $query->get();
+        $transactions = $query->paginate(10)->appends($request->only('search', 'date'));
 
         return view('transaction.index', compact('transactions'));
     }
