@@ -99,6 +99,10 @@
                         </tbody>
                     </table>
                 </div>
+                {{--  pagination  --}}
+                <div class="mt-4 justify-center">
+                    {{ $transactions->onEachSide(1)->links('vendor.pagination.simple-numbers') }}
+                </div>
             @else
                 {{--  jika tidak ada riwayat transaksi yang masuk maka tampilkan ini  --}}
                 <p class="text-white">Tidak ada transaksi yang ditemukan.</p>
