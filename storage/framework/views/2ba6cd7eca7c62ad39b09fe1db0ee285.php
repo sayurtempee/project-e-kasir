@@ -278,11 +278,12 @@
                 scannerContainer.classList.add('hidden');
 
                 // Kirim barcode ke server
-                fetch("<?php echo e(route('cart.scan')); ?>", {
+                fetch("/cart/scan", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": "<?php echo e(csrf_token()); ?>"
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            "X-Requested-With": "XMLHttpRequest"
                         },
                         body: JSON.stringify({
                             barcode: barcode

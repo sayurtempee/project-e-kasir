@@ -9,6 +9,8 @@ use App\Models\Transaction;
 use App\Models\Member;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 
 class CartController extends Controller
 {
@@ -234,6 +236,11 @@ class CartController extends Controller
      */
     public function scan(Request $request)
     {
+        Log::info("Barcode scanned request masuk", [
+            'auth' => Auth::id(),
+            'barcode' => $request->barcode
+        ]);
+
         $request->validate([
             'barcode' => 'required|string',
         ]);
