@@ -18,7 +18,7 @@
 -   **Nama** : FARIS HILMI AL - IZA
 -   **Kelas** : XI RPL 2
 -   **Jurusan** : REKAYASA PERANGKAT LUNAK
--   **Link** : <a href="https://kasir.hilmializa.my.id" target="_self">Link</a>
+-   **Link** : <a href="https://kasir.hilmializa.my.id" target="_blank">click here</a>
 
 ---
 
