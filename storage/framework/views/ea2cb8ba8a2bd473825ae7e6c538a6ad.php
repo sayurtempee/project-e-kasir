@@ -79,7 +79,8 @@ unset($__errorArgs, $__bag); ?>
                         class="px-4 py-2 rounded text-white bg-[#1E3A8A] hover:bg-blue-950 transition duration-200">Login</button>
                     <div class="text-end">
                         
-                        
+                        <div class="small text-gray-600">Belum punya akun? <a href="<?php echo e(route('register')); ?>"
+                                class="text-blue-600 hover:text-blue-800">Daftar di sini</a></div>
 
                         <div class="small">Kamu lupa password?? <a href="<?php echo e(route('forgot.password')); ?>"
                                 class="text-blue-600 hover:text-blue-800">klik disini</a></div>
