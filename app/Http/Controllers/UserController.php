@@ -21,7 +21,7 @@ class UserController extends Controller
         $users = User::query()
             ->when($search, function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%")
-                      ->orWhere('email', 'like', "%{$search}%");
+                ->orWhere('email', 'like', "%{$search}%");
             })
             ->get();
 
@@ -83,14 +83,13 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $admin->id,
-            'role' => 'required|in:admin,kasir',
+            'role' => 'in:admin,kasir',
             'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $admin->update([
             'name' => $request->name,
             'email' => $request->email,
-            'role' => $request->role,
         ]);
 
         $dataUpdate = [];
@@ -107,7 +106,7 @@ class UserController extends Controller
             $admin->update($dataUpdate);
         }
 
-        return redirect()->route('admin.index')->with('success', 'Data admin berhasil diperbarui.');
+        return redirect()->route('admin.index')->with('success', 'Data berhasil diperbarui.');
     }
 
     /**
@@ -169,9 +168,14 @@ class UserController extends Controller
             $user->photo = $path;
         }
 
+        $message = 'Profil berhasil diperbarui!';
+        if ($request->has('hapus_foto')) {
+            $message .= ' Foto profil telah dihapus.';
+        }
+
         $user->save();
 
         $redirectTo = $request->input('redirect_to', route('dashboard'));
-        return redirect($redirectTo)->with('success', 'Profil berhasil diperbarui!');
+        return redirect($redirectTo)->with('success', 'Profile berhasil diperbarui!');
     }
 }

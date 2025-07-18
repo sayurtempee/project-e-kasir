@@ -6,12 +6,24 @@
 <x-app-layout>
     <div class="min-h-screen bg-[#3B82F6] py-10 px-4">
         <div class="mb-6 flex justify-end">
-            <a href="{{ url()->previous() }}"
+            <a href="{{ route('dashboard') }}"
                 class="inline-flex items-center px-4 py-2 bg-[#1E3A8A] text-white text-sm font-semibold rounded-md
                        hover:bg-blue-950 hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out">
                 ← Kembali
             </a>
         </div>
+
+        @if (session('success'))
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: '{{ session('success') }}',
+                    showConfirmButton: false,
+                    timer: 2500
+                });
+            </script>
+        @endif
 
         <div
             class="max-w-3xl mx-auto bg-blue-950 p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
@@ -82,7 +94,7 @@
                         Simpan Perubahan
                     </button>
                 </div>
-                <input type="hidden" name="redirect_to" value="{{ url()->previous() }}">
+                <input type="hidden" name="redirect_to" value="{{ route('profile.edit') }}">
             </form>
         </div>
     </div>

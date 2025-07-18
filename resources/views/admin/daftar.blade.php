@@ -12,6 +12,7 @@
 <body class="bg-[#3B82F6] min-h-screen grid grid-rows-[auto,1fr,auto]">
     @include('layouts.navbar-2')
     @include('layouts.sidebar')
+    @include('layouts.alert')
 
     <div class="ml-64 mt-16 p-8 font-sans">
         <div class="container mx-auto p-4">
