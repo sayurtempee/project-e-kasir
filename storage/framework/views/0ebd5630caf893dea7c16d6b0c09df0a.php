@@ -12,7 +12,6 @@
 <body class="bg-[#3B82F6] min-h-screen grid grid-rows-[auto,1fr,auto]">
     <?php echo $__env->make('layouts.navbar-2', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
     <?php echo $__env->make('layouts.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-    <?php echo $__env->make('layouts.alert', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
     <div class="ml-64 mt-16 p-8 font-sans">
         <div class="container mx-auto p-4">
