@@ -76,9 +76,9 @@
                 <?php $__currentLoopData = $chunk; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $transaction): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <tr>
                         <td><?php echo e($loop->iteration); ?></td>
-                        <td><?php echo e($transaction->product->name); ?></td>
+                        <td><?php echo e($transaction->product->name ?? '-'); ?></td>
                         <td><?php echo e($transaction->product->category->name ?? '-'); ?></td>
-                        <td><?php echo e($transaction->quantity); ?> <?php echo e($transaction->product->stock_unit); ?></td>
+                        <td><?php echo e($transaction->quantity); ?> <?php echo e($transaction->product->stock_unit ?? '-'); ?></td>
                         <td>Rp<?php echo e(number_format($transaction->product->price, 0, ',', '.')); ?></td>
                         <td>Rp<?php echo e(number_format($transaction->total_price, 0, ',', '.')); ?></td>
                         <td><?php echo e(\Carbon\Carbon::parse($transaction->created_at)->format('Y-m-d H:i:s')); ?></td>
@@ -93,7 +93,7 @@
     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
     <h3 style="text-align: center; font-weight: bold;">
-        Total Keseluruhan: Rp<?php echo e(number_format($transactions->sum('total_price'), 0, ',', '.')); ?>
+        Total Keuntungan Semua: Rp<?php echo e(number_format($transactions->sum('total_price'), 0, ',', '.')); ?>
 
     </h3>
 </body>
