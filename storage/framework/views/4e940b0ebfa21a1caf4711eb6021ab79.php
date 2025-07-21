@@ -59,6 +59,15 @@
                     </form>
                 <?php endif; ?>
             </div>
+            <div class="flex justify-center mb-6">
+                <div class="w-full bg-[#1E3A8A] border border-[#1E3A8A] text-white px-6 py-4 rounded-lg shadow font-semibold text-lg text-center">
+                    Total Keuntungan Semua:
+                    <span class="font-bold text-yellow-300">
+                        Rp<?php echo e(number_format($transactions->sum('total_price'), 0, ',', '.')); ?>
+
+                    </span>
+                </div>
+            </div>
             
             <?php if($transactions->count() > 0): ?>
                 <div class="overflow-x-auto bg-white rounded-lg shadow-lg">
@@ -69,7 +78,7 @@
                                 <th class="px-6 py-3 text-left">Nama Produk</th>
                                 <th class="px-6 py-3 text-left">Nama Kategori</th>
                                 <th class="px-6 py-3 text-left">Jumlah</th>
-                                <th class="px-6 py-3 text-left">Harga</th>
+                                <th class="px-6 py-3 text-left">Harga Produk</th>
                                 <th class="px-6 py-3 text-left">Total Harga</th>
                                 <th class="px-6 py-3 text-left">Tanggal Transaksi</th>
                             </tr>
@@ -89,7 +98,9 @@
                                     </td>
                                     <td class="px-6 py-3"><?php echo e($transaction->product->name ?? '-'); ?></td>
                                     <td class="px-6 py-3"><?php echo e($transaction->product->category->name ?? '-'); ?></td>
-                                    <td class="px-6 py-3"><?php echo e($transaction->quantity); ?></td>
+                                    <td class="px-6 py-3"><?php echo e($transaction->quantity); ?>
+
+                                        <?php echo e($transaction->product->stock_unit ?? '-'); ?></td>
                                     <td class="px-6 py-3">Rp<?php echo e(number_format($transaction->product->price)); ?></td>
                                     <td class="px-6 py-3">Rp<?php echo e(number_format($transaction->total_price)); ?></td>
                                     <td class="px-6 py-3">

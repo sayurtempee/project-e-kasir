@@ -20,6 +20,18 @@
                 DAFTAR PRODUK
             </h1>
 
+            @if (session('success'))
+                <script>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sukses!',
+                        text: @json(session('success')),
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                </script>
+            @endif
+
             @if (session('error'))
                 <div x-data="{ show: true }" x-show="show"
                     class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 relative">
@@ -68,9 +80,9 @@
                         <tr>
                             <th class="px-6 py-3 text-left">Gambar</th>
                             <th class="px-6 py-3 text-left">Nama Produk</th>
-                            <th class="px-6 py-3 text-left">Nama Kategori</th>
-                            <th class="px-6 py-3 text-left">Kode Produk</th>
-                            <th class="px-6 py-3 text-left">Barcode</th>
+                            <th class="px-6 py-3 text-left">Kategori</th>
+                            <th class="px-6 py-3 text-left">Barcode Produk</th>
+                            {{--  <th class="px-6 py-3 text-left">Barcode</th>  --}}
                             <th class="px-6 py-3 text-left">Harga Produk</th>
                             {{--  <th class="px-6 py-3 text-left">Jumlah Stok</th>  --}}
                             <th class="px-6 py-3 text-left">Jumlah Stok</th>
@@ -86,10 +98,15 @@
                                 </td>
                                 <td class="px-6 py-3">{{ $product->name }}</td>
                                 <td class="px-6 py-3">{{ $product->category->name }}</td>
-                                <td class="px-6 py-3">{{ $product->code }}</td>
                                 <td class="px-6 py-3">
-                                    <svg id="barcode-{{ $product->id }}" class="w-[200px] h-[50px]"></svg>
+                                    <button onclick="showBarcodeModal('{{ $product->id }}', '{{ $product->code }}')"
+                                        class="text-blue-600 font-bold hover:underline focus:outline-none">
+                                        {{ $product->code }}
+                                    </button>
                                 </td>
+                                {{--  <td class="px-6 py-3">
+                                    <svg id="barcode-{{ $product->id }}" class="w-[200px] h-[50px]"></svg>
+                                </td>  --}}
                                 <td class="px-6 py-3">{{ $product->price }}</td>
                                 {{--  <td class="px-6 py-3">
                                     <span
@@ -181,6 +198,22 @@
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Barcode -->
+    <div id="barcodeModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+            <h2 class="text-xl font-semibold mb-4">Barcode Produk</h2>
+            <div class="flex justify-center">
+                <svg id="modal-barcode" class="w-[250px] h-[80px]"></svg>
+            </div>
+            <div class="mt-4 text-right">
+                <button onclick="closeBarcodeModal()"
+                    class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                    Tutup
+                </button>
             </div>
         </div>
     </div>
@@ -282,7 +315,8 @@
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                'content'),
                             "X-Requested-With": "XMLHttpRequest"
                         },
                         body: JSON.stringify({
@@ -334,6 +368,23 @@
                 modal.classList.toggle('hidden');
                 modal.classList.toggle('flex');
             }
+        }
+
+        function showBarcodeModal(id, code) {
+            // Render barcode baru ke dalam modal
+            JsBarcode("#modal-barcode", code, {
+                format: "CODE128",
+                width: 2,
+                height: 80,
+                displayValue: true
+            });
+
+            // Tampilkan modal
+            document.getElementById('barcodeModal').classList.remove('hidden');
+        }
+
+        function closeBarcodeModal() {
+            document.getElementById('barcodeModal').classList.add('hidden');
         }
     </script>
 </body>

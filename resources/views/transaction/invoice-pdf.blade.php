@@ -88,11 +88,11 @@
         <div class="center">Telp: 0812-3456-7890</div>
         <div class="line"></div>
 
-        <div>Tanggal: {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('l, d F Y H:i') }}</div>
         <div>No. Transaksi: #{{ $transactions->first()->id }}</div>
+        <div>Tanggal Transaksi: {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('l, d F Y H:i') }}</div>
         {{-- Tampilkan nama member jika ada --}}
         @if (isset($memberName) && $memberName)
-            <div>Nama Pembeli: {{ $memberName }}</div>
+            <div>Nama Member: {{ $memberName }}</div>
         @endif
         @if ($memberPhone)
             <div>No. Telepon: {{ $memberPhone }}</div>
@@ -109,7 +109,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="left">{{ $trx->quantity }} x Rp{{ number_format($trx->product->price) }}</td>
+                    <td class="left">{{ $trx->quantity }} {{ $trx->product->stock_unit }} x Rp{{ number_format($trx->product->price) }}</td>
                     <td class="right">Rp{{ number_format($trx->total_price) }}</td>
                 </tr>
             @endforeach
@@ -118,16 +118,16 @@
         <div class="line"></div>
         <table>
             <tr>
+                <td class="bold left">UANG DIBAYAR</td>
+                <td class="bold right">Rp{{ number_format($paidAmount, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
                 <td class="bold left">SUBTOTAL</td>
-                <td class="bold right">Rp{{ number_format($subtotal) }}</td>
+                <td class="bold right">Rp{{ number_format($totalBayar) }}</td>
             </tr>
             <tr>
                 <td class="bold left">KEMBALIAN</td>
                 <td class="bold right">Rp{{ number_format($change) }}</td>
-            </tr>
-            <tr>
-                <td class="bold left">TOTAL BAYAR</td>
-                <td class="bold right">Rp{{ number_format($totalBayar) }}</td>
             </tr>
         </table>
 

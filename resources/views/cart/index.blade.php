@@ -67,8 +67,11 @@
                                 @endphp
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="px-6 py-3">
-                                        <input type="checkbox" name="selected_carts[]" value="{{ $cart->id }}"
-                                            class="mr-2">
+                                        <label class="inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" name="selected_carts[]" value="{{ $cart->id }}"
+                                                class="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition duration-150">
+                                            <span class="ml-2"></span>
+                                        </label>
                                     </td>
                                     <td class="px-6 py-3">
                                         <img src="{{ Storage::url($cart->product->img) }}"

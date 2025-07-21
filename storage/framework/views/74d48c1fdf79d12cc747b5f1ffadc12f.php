@@ -48,7 +48,7 @@
                         <td class="border p-2">
                             <svg id="barcode-<?php echo e($trx->id); ?>"></svg>
                         </td>
-                        <td class="border p-2"><?php echo e($trx->quantity); ?></td>
+                        <td class="border p-2"><?php echo e($trx->quantity); ?> <?php echo e($trx->product->stock_unit ?? '-'); ?></td>
                         <td class="border p-2">Rp<?php echo e(number_format($trx->product->price)); ?></td>
                         <td class="border p-2">Rp<?php echo e(number_format($trx->total_price)); ?></td>
                     </tr>
@@ -68,6 +68,10 @@
                         <span class="text-blue-700"><?php echo e($transactions[0]->member->name); ?></span>
                     </div>
                 <?php endif; ?>
+                <div class="mb-1 flex justify-between">
+                    <span class="text-gray-600 font-semibold">Uang Dibayar:</span>
+                    <span class="text-blue-700">Rp<?php echo e(number_format($paidAmount, 0, ',', '.')); ?></span>
+                </div>
                 <div class="mb-1 flex justify-between">
                     <span class="text-gray-600"><strong>SubTotal:</strong></span>
                     <span class="text-green-700">Rp<?php echo e(number_format($grandTotal)); ?></span>

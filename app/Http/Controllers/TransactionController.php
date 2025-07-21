@@ -153,11 +153,10 @@ class TransactionController extends Controller
         $transactions = Transaction::with('product.category')->get();
 
         $pdf = Pdf::loadView('transaction.pdf', compact('transactions'))
-                  ->setPaper('a4', 'landscape');
+            ->setPaper('a4', 'landscape');
 
         return $pdf->download('transaksi.pdf');
     }
-
     public function showInvoice(Request $request, $ids)
     {
         $idsArray = explode(',', $ids);
@@ -166,13 +165,18 @@ class TransactionController extends Controller
             ->whereIn('id', $idsArray)
             ->get();
 
+        if ($transactions->isEmpty()) {
+            abort(404, 'Transaksi tidak ditemukan.');
+        }
+
         $grandTotal = $transactions->sum('total_price');
 
-        // Ambil kembalian dari transaksi pertama (yang sudah disimpan)
-        $change = $transactions->first()->change ?? 0;
-        // dd($transactions->first());
+        // Ambil dari transaksi pertama
+        $firstTransaction = $transactions->first();
+        $paidAmount = $firstTransaction->paid_amount ?? 0;
+        $change = $firstTransaction->change ?? 0;
 
-        return view('transaction.invoice', compact('transactions', 'grandTotal', 'change'));
+        return view('transaction.invoice', compact('transactions', 'grandTotal', 'paidAmount', 'change'));
     }
 
     public function downloadInvoicePdf($ids)
@@ -216,6 +220,7 @@ class TransactionController extends Controller
             'subtotal',
             'change',
             'totalBayar',
+            'paidAmount',
             'memberName',
             'memberPhone'
         ));
@@ -242,6 +247,7 @@ class TransactionController extends Controller
         }
 
         $grandTotal = $transactions->sum('total_price');
+        $paidAmount = $transactions->first()->paid_amount ?? 0;
 
         // Bangun pesan WhatsApp
         $message = "```\n";
@@ -255,7 +261,7 @@ class TransactionController extends Controller
 
         foreach ($transactions as $trx) {
             $namaProduk = $trx->product->name ?? '-';
-            $qty = $trx->quantity;
+            $qty = $trx->quantity . ' ' . ($trx->product->stock_unit ?? 'pcs');
             $harga = number_format($trx->product->price ?? 0, 0, ',', '.');
             $subtotal = number_format($trx->total_price, 0, ',', '.');
             $message .= "{$namaProduk}\n";
@@ -268,6 +274,7 @@ class TransactionController extends Controller
         $message .= "Nomor   : {$memberPhone}\n";
         $memberName = optional($transactions->first()->member)->name ?? '-';
         $message .= "Member     : {$memberName}\n";
+        $message .= "Uang Bayar : Rp" . number_format($paidAmount, 0, ',', '.') . "\n";
         $message .= "SubTOTAL: Rp" . number_format($grandTotal, 0, ',', '.') . "\n";
         $change = $transactions->first()->change ?? 0;
         $message .= "Kembalian  : Rp" . number_format($change, 0, ',', '.') . "\n";
@@ -311,7 +318,7 @@ class TransactionController extends Controller
             ->get();
 
         $pdf = Pdf::loadView('transaction.laporan', compact('transactions', 'date'))
-                  ->setPaper('a4', 'landscape');
+            ->setPaper('a4', 'landscape');
 
         return $pdf->download('laporan-transaksi.pdf');
     }

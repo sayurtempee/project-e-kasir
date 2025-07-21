@@ -93,7 +93,7 @@ class CartController extends Controller
             ]);
         }
 
-        return redirect()->route('cart.index')->with('success', 'Produk ' . $product->name . ' ditambahkan ke keranjang');
+        return redirect()->route('product.index')->with('success', 'Produk ' . $product->name . ' ditambahkan ke keranjang');
     }
 
     /**

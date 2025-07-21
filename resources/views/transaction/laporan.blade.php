@@ -54,7 +54,7 @@
                     <td>{{ $i + 1 }}</td>
                     <td>{{ $transaction->product->name ?? '-' }}</td>
                     <td>{{ $transaction->product->category->name ?? '-' }}</td>
-                    <td>{{ $transaction->quantity }}</td>
+                    <td>{{ $transaction->quantity }} {{ $transaction->product->stock_unit ?? '-' }}</td>
                     <td>Rp{{ number_format($transaction->product->price ?? 0, 0, ',', '.') }}</td>
                     <td>Rp{{ number_format($transaction->total_price, 0, ',', '.') }}</td>
                     <td>{{ $transaction->created_at->setTimezone('Asia/Jakarta')->locale('id')->translatedFormat('d F Y H:i') }}

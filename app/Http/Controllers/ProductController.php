@@ -81,7 +81,7 @@ class ProductController extends Controller
         // dd($validatedData);
 
         Product::create($validatedData);
-        return redirect()->route('product.index')->with('success', 'Product successfully added');
+        return redirect()->route('product.index')->with('success', 'Product berhasil ditambahkan ke keranjang');
     }
 
     /**

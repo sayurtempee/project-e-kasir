@@ -50,7 +50,7 @@
                         <td class="border p-2">
                             <svg id="barcode-{{ $trx->id }}"></svg>
                         </td>
-                        <td class="border p-2">{{ $trx->quantity }}</td>
+                        <td class="border p-2">{{ $trx->quantity }} {{ $trx->product->stock_unit ?? '-' }}</td>
                         <td class="border p-2">Rp{{ number_format($trx->product->price) }}</td>
                         <td class="border p-2">Rp{{ number_format($trx->total_price) }}</td>
                     </tr>
@@ -70,6 +70,10 @@
                         <span class="text-blue-700">{{ $transactions[0]->member->name }}</span>
                     </div>
                 @endif
+                <div class="mb-1 flex justify-between">
+                    <span class="text-gray-600 font-semibold">Uang Dibayar:</span>
+                    <span class="text-blue-700">Rp{{ number_format($paidAmount, 0, ',', '.') }}</span>
+                </div>
                 <div class="mb-1 flex justify-between">
                     <span class="text-gray-600"><strong>SubTotal:</strong></span>
                     <span class="text-green-700">Rp{{ number_format($grandTotal) }}</span>

@@ -88,11 +88,11 @@
         <div class="center">Telp: 0812-3456-7890</div>
         <div class="line"></div>
 
-        <div>Tanggal: <?php echo e(\Carbon\Carbon::now()->locale('id')->translatedFormat('l, d F Y H:i')); ?></div>
         <div>No. Transaksi: #<?php echo e($transactions->first()->id); ?></div>
+        <div>Tanggal Transaksi: <?php echo e(\Carbon\Carbon::now()->locale('id')->translatedFormat('l, d F Y H:i')); ?></div>
         
         <?php if(isset($memberName) && $memberName): ?>
-            <div>Nama Pembeli: <?php echo e($memberName); ?></div>
+            <div>Nama Member: <?php echo e($memberName); ?></div>
         <?php endif; ?>
         <?php if($memberPhone): ?>
             <div>No. Telepon: <?php echo e($memberPhone); ?></div>
@@ -109,7 +109,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="left"><?php echo e($trx->quantity); ?> x Rp<?php echo e(number_format($trx->product->price)); ?></td>
+                    <td class="left"><?php echo e($trx->quantity); ?> <?php echo e($trx->product->stock_unit); ?> x Rp<?php echo e(number_format($trx->product->price)); ?></td>
                     <td class="right">Rp<?php echo e(number_format($trx->total_price)); ?></td>
                 </tr>
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -118,16 +118,16 @@
         <div class="line"></div>
         <table>
             <tr>
+                <td class="bold left">UANG DIBAYAR</td>
+                <td class="bold right">Rp<?php echo e(number_format($paidAmount, 0, ',', '.')); ?></td>
+            </tr>
+            <tr>
                 <td class="bold left">SUBTOTAL</td>
-                <td class="bold right">Rp<?php echo e(number_format($subtotal)); ?></td>
+                <td class="bold right">Rp<?php echo e(number_format($totalBayar)); ?></td>
             </tr>
             <tr>
                 <td class="bold left">KEMBALIAN</td>
                 <td class="bold right">Rp<?php echo e(number_format($change)); ?></td>
-            </tr>
-            <tr>
-                <td class="bold left">TOTAL BAYAR</td>
-                <td class="bold right">Rp<?php echo e(number_format($totalBayar)); ?></td>
             </tr>
         </table>
 

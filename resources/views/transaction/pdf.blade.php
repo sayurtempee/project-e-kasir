@@ -75,9 +75,9 @@
                 @foreach ($chunk as $transaction)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $transaction->product->name }}</td>
+                        <td>{{ $transaction->product->name ?? '-' }}</td>
                         <td>{{ $transaction->product->category->name ?? '-' }}</td>
-                        <td>{{ $transaction->quantity }}</td>
+                        <td>{{ $transaction->quantity }} {{ $transaction->product->stock_unit ?? '-' }}</td>
                         <td>Rp{{ number_format($transaction->product->price, 0, ',', '.') }}</td>
                         <td>Rp{{ number_format($transaction->total_price, 0, ',', '.') }}</td>
                         <td>{{ \Carbon\Carbon::parse($transaction->created_at)->format('Y-m-d H:i:s') }}</td>
@@ -92,7 +92,7 @@
     @endforeach
 
     <h3 style="text-align: center; font-weight: bold;">
-        Total Keseluruhan: Rp{{ number_format($transactions->sum('total_price'), 0, ',', '.') }}
+        Total Keuntungan Semua: Rp{{ number_format($transactions->sum('total_price'), 0, ',', '.') }}
     </h3>
 </body>
 
