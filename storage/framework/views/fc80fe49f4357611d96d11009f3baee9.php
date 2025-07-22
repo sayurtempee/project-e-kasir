@@ -22,38 +22,40 @@
             </h1>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                <div class="bg-teal-500 p-8 min-h-[150px] rounded-lg text-center border-2 border-white">
-                    <div class="text-xl font-bold mb-2">
-                        Admin
-                    </div>
-                    <div class="text-4xl font-bold flex items-center justify-center">
-                        <i class="fas fa-user-shield mr-2"></i>
-                        <?php echo e($adminCount); ?>
+                <?php if(auth()->user()->role === 'admin'): ?>
+                    <div class="bg-teal-500 p-8 min-h-[150px] rounded-lg text-center border-2 border-white">
+                        <div class="text-xl font-bold mb-2">
+                            Admin
+                        </div>
+                        <div class="text-4xl font-bold flex items-center justify-center">
+                            <i class="fas fa-user-shield mr-2"></i>
+                            <?php echo e($adminCount); ?>
 
+                        </div>
                     </div>
-                </div>
 
-                <div class="bg-teal-500 p-8 min-h-[150px] rounded-lg text-center border-2 border-white">
-                    <div class="text-xl font-bold mb-2">
-                        Kasir
-                    </div>
-                    <div class="text-4xl font-bold flex items-center justify-center">
-                        <i class="fas fa-cash-register mr-2"></i>
-                        <?php echo e($cashierCount); ?>
+                    <div class="bg-teal-500 p-8 min-h-[150px] rounded-lg text-center border-2 border-white">
+                        <div class="text-xl font-bold mb-2">
+                            Kasir
+                        </div>
+                        <div class="text-4xl font-bold flex items-center justify-center">
+                            <i class="fas fa-cash-register mr-2"></i>
+                            <?php echo e($cashierCount); ?>
 
+                        </div>
                     </div>
-                </div>
 
-                <div class="bg-teal-500 p-8 min-h-[150px] rounded-lg text-center border-2 border-white">
-                    <div class="text-xl font-bold mb-2">
-                        Member
-                    </div>
-                    <div class="text-4xl font-bold flex items-center justify-center">
-                        <i class="fas fa-users mr-2"></i>
-                        <?php echo e($memberCount); ?>
+                    <div class="bg-teal-500 p-8 min-h-[150px] rounded-lg text-center border-2 border-white">
+                        <div class="text-xl font-bold mb-2">
+                            Member
+                        </div>
+                        <div class="text-4xl font-bold flex items-center justify-center">
+                            <i class="fas fa-users mr-2"></i>
+                            <?php echo e($memberCount); ?>
 
+                        </div>
                     </div>
-                </div>
+                <?php endif; ?>
 
                 <div class="bg-teal-500 p-8 min-h-[150px] rounded-lg text-center border-2 border-white">
                     <div class="text-xl font-bold mb-2">
@@ -89,35 +91,38 @@
                 </div>
             </div>
 
-            <form method="GET" action="<?php echo e(route('dashboard')); ?>" class="mb-6 flex items-center gap-3">
-                <label for="range" class="text-white font-semibold whitespace-nowrap">Tampilkan:</label>
-                <div class="relative w-52">
-                    <!-- Trigger Dropdown: kita ganti jadi button biasa tanpa interaksi JS -->
-                    <button type="button" onclick="document.getElementById('dropdown-menu').classList.toggle('hidden')"
-                        class="w-full bg-white text-blue-800 font-semibold py-2 px-4 rounded flex justify-between items-center border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
-                        <?php echo e($range === '30' ? '30 Hari Terakhir' : ($range === 'all' ? 'Semua' : '7 Hari Terakhir')); ?>
+            <?php if(auth()->user()->role === 'admin'): ?>
+                <form method="GET" action="<?php echo e(route('dashboard')); ?>" class="mb-6 flex items-center gap-3">
+                    <label for="range" class="text-white font-semibold whitespace-nowrap">Tampilkan:</label>
+                    <div class="relative w-52">
+                        <!-- Trigger Dropdown: kita ganti jadi button biasa tanpa interaksi JS -->
+                        <button type="button"
+                            onclick="document.getElementById('dropdown-menu').classList.toggle('hidden')"
+                            class="w-full bg-white text-blue-800 font-semibold py-2 px-4 rounded flex justify-between items-center border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+                            <?php echo e($range === '30' ? '30 Hari Terakhir' : ($range === 'all' ? 'Semua' : '7 Hari Terakhir')); ?>
 
-                        <i class="fas fa-chevron-down transition-transform duration-200"></i>
-                    </button>
+                            <i class="fas fa-chevron-down transition-transform duration-200"></i>
+                        </button>
 
-                    <!-- Dropdown Options (hidden by default) -->
-                    <div id="dropdown-menu"
-                        class="hidden absolute mt-2 w-full bg-white border border-gray-300 rounded shadow-md z-10">
-                        <a href="<?php echo e(route('dashboard', ['range' => '7'])); ?>"
-                            class="block px-4 py-2 hover:bg-blue-100 text-blue-800 font-semibold <?php echo e($range === '7' ? 'bg-blue-50' : ''); ?>">
-                            7 Hari Terakhir
-                        </a>
-                        <a href="<?php echo e(route('dashboard', ['range' => '30'])); ?>"
-                            class="block px-4 py-2 hover:bg-blue-100 text-blue-800 font-semibold <?php echo e($range === '30' ? 'bg-blue-50' : ''); ?>">
-                            30 Hari Terakhir
-                        </a>
-                        <a href="<?php echo e(route('dashboard', ['range' => 'all'])); ?>"
-                            class="block px-4 py-2 hover:bg-blue-100 text-blue-800 font-semibold <?php echo e($range === 'all' ? 'bg-blue-50' : ''); ?>">
-                            Semua
-                        </a>
+                        <!-- Dropdown Options (hidden by default) -->
+                        <div id="dropdown-menu"
+                            class="hidden absolute mt-2 w-full bg-white border border-gray-300 rounded shadow-md z-10">
+                            <a href="<?php echo e(route('dashboard', ['range' => '7'])); ?>"
+                                class="block px-4 py-2 hover:bg-blue-100 text-blue-800 font-semibold <?php echo e($range === '7' ? 'bg-blue-50' : ''); ?>">
+                                7 Hari Terakhir
+                            </a>
+                            <a href="<?php echo e(route('dashboard', ['range' => '30'])); ?>"
+                                class="block px-4 py-2 hover:bg-blue-100 text-blue-800 font-semibold <?php echo e($range === '30' ? 'bg-blue-50' : ''); ?>">
+                                30 Hari Terakhir
+                            </a>
+                            <a href="<?php echo e(route('dashboard', ['range' => 'all'])); ?>"
+                                class="block px-4 py-2 hover:bg-blue-100 text-blue-800 font-semibold <?php echo e($range === 'all' ? 'bg-blue-50' : ''); ?>">
+                                Semua
+                            </a>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            <?php endif; ?>
 
             <div class="bg-teal-500 p-6 rounded-lg border-2 border-white">
                 <h2 class="text-2xl font-bold mb-4">

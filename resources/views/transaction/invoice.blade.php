@@ -29,7 +29,7 @@
                     <th class="border p-2">Nama Produk</th>
                     <th class="border p-2">Nama Kategori</th>
                     {{--  <th class="border p-2">Kode</th>  --}}
-                    <th class="border p-2">Barcode</th>
+                    <th class="border p-2">Barcode Produk</th>
                     <th class="border p-2">Jumlah</th>
                     <th class="border p-2">Harga</th>
                     <th class="border p-2">Subtotal</th>
@@ -47,8 +47,14 @@
                         <td class="border p-2">{{ $trx->product->name }}</td>
                         <td class="border p-2">{{ $trx->product->category->name }}</td>
                         {{--  <td class="border p-2">{{ $trx->product->code }}</td>  --}}
-                        <td class="border p-2">
+                        {{--  <td class="border p-2">
                             <svg id="barcode-{{ $trx->id }}"></svg>
+                        </td>  --}}
+                        <td class="px-6 py-3">
+                            <button onclick="showBarcodeModal('{{ $trx->product->id }}', '{{ $trx->product->code }}')"
+                                class="text-blue-600 font-bold hover:underline focus:outline-none">
+                                {{ $trx->product->code }}
+                            </button>
                         </td>
                         <td class="border p-2">{{ $trx->quantity }} {{ $trx->product->stock_unit ?? '-' }}</td>
                         <td class="border p-2">Rp{{ number_format($trx->product->price) }}</td>
@@ -158,6 +164,21 @@
             </div>
         </div>
 
+        <!-- Modal Barcode -->
+        <div id="barcodeModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+                <h2 class="text-xl font-semibold mb-4">Barcode Produk</h2>
+                <div class="flex justify-center">
+                    <svg id="modal-barcode" class="w-[250px] h-[80px]"></svg>
+                </div>
+                <div class="mt-4 text-right">
+                    <button onclick="closeBarcodeModal()" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 @foreach ($transactions as $trx)
@@ -181,5 +202,22 @@
                     });
                 @endif
             });
+
+            function showBarcodeModal(id, code) {
+                // Render barcode baru ke dalam modal
+                JsBarcode("#modal-barcode", code, {
+                    format: "CODE128",
+                    width: 2,
+                    height: 80,
+                    displayValue: true
+                });
+
+                // Tampilkan modal
+                document.getElementById('barcodeModal').classList.remove('hidden');
+            }
+
+            function closeBarcodeModal() {
+                document.getElementById('barcodeModal').classList.add('hidden');
+            }
         </script>
     @endsection

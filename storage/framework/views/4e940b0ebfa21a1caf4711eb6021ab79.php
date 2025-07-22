@@ -46,21 +46,24 @@
                         </button>
                     </form>
                 <?php endif; ?>
-                <?php if($transactions->count() > 0): ?>
-                    <form action="<?php echo e(route('transaction.destroyAll')); ?>" method="POST"
-                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus semua transaksi?');"
-                        class="inline-block">
-                        <?php echo csrf_field(); ?>
-                        <?php echo method_field('DELETE'); ?>
-                        <button type="submit"
-                            class="bg-red-600 text-white font-semibold px-4 py-2 rounded hover:bg-red-700 transition">
-                            Hapus Semua Transaksi
-                        </button>
-                    </form>
+                <?php if(auth()->user()->role === 'admin'): ?>
+                    <?php if($transactions->count() > 0): ?>
+                        <form action="<?php echo e(route('transaction.destroyAll')); ?>" method="POST"
+                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus semua transaksi?');"
+                            class="inline-block">
+                            <?php echo csrf_field(); ?>
+                            <?php echo method_field('DELETE'); ?>
+                            <button type="submit"
+                                class="bg-red-600 text-white font-semibold px-4 py-2 rounded hover:bg-red-700 transition">
+                                Hapus Semua Transaksi
+                            </button>
+                        </form>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
             <div class="flex justify-center mb-6">
-                <div class="w-full bg-[#1E3A8A] border border-[#1E3A8A] text-white px-6 py-4 rounded-lg shadow font-semibold text-lg text-center">
+                <div
+                    class="w-full bg-[#1E3A8A] border border-[#1E3A8A] text-white px-6 py-4 rounded-lg shadow font-semibold text-lg text-center">
                     Total Keuntungan Semua:
                     <span class="font-bold text-yellow-300">
                         Rp<?php echo e(number_format($transactions->sum('total_price'), 0, ',', '.')); ?>

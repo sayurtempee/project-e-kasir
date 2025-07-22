@@ -45,13 +45,15 @@
             <?php endif; ?>
 
             <!-- Tombol Tambah Produk -->
-            <div class="flex justify-end mb-4">
-                <a href="<?php echo e(route('product.create')); ?>"
-                    class="font-semibold py-2 px-4 rounded-lg transition duration-300
+            <?php if(auth()->user()->role === 'admin'): ?>
+                <div class="flex justify-end mb-4">
+                    <a href="<?php echo e(route('product.create')); ?>"
+                        class="font-semibold py-2 px-4 rounded-lg transition duration-300
                        bg-[#1E3A8A] text-white hover:bg-blue-950 hover:border-black hover:text-black">
-                    Tambah Produk
-                </a>
-            </div>
+                        Tambah Produk
+                    </a>
+                </div>
+            <?php endif; ?>
 
             <div class="mb-4">
                 <form action="<?php echo e(route('product.index')); ?>" method="GET" class="flex items-center gap-2">
@@ -67,6 +69,13 @@
                         hover:bg-green-800 hover:text-gray-300 transition duration-300 flex items-center space-x-2">
                         <span>Scan Barcode</span>
                     </button>
+                    <?php if(auth()->user()->role === 'kasir'): ?>
+                        <a href="<?php echo e(route('member.create')); ?>"
+                            class="bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-purple-800 transition duration-300 flex items-center gap-2">
+                            <i class="fas fa-user-plus"></i>
+                            Tambah Member
+                        </a>
+                    <?php endif; ?>
                 </form>
             </div>
 
@@ -161,24 +170,26 @@
                                         </div>
                                     </div>
                                     
-                                    <a href="<?php echo e(route('product.edit', $product->id)); ?>"
-                                        class="flex items-center justify-center bg-yellow-400 text-black font-semibold px-2 py-1 rounded hover:bg-yellow-500 transition">
-                                        <i class="fas fa-edit mr-1 text-base"></i> <span class="text-sm">Edit</span>
-                                    </a>
-                                    <form action="<?php echo e(route('product.destroy', $product->id)); ?>" method="POST"
-                                        onsubmit="return confirm('Yakin ingin menghapus <?php echo e($product->name); ?>?');">
-                                        <?php echo csrf_field(); ?>
-                                        <?php echo method_field('DELETE'); ?>
-                                        <button type="submit"
-                                            class="w-full flex items-center justify-center
+                                    <?php if(auth()->user()->role === 'admin'): ?>
+                                        <a href="<?php echo e(route('product.edit', $product->id)); ?>"
+                                            class="flex items-center justify-center bg-yellow-400 text-black font-semibold px-2 py-1 rounded hover:bg-yellow-500 transition">
+                                            <i class="fas fa-edit mr-1 text-base"></i> <span class="text-sm">Edit</span>
+                                        </a>
+                                        <form action="<?php echo e(route('product.destroy', $product->id)); ?>" method="POST"
+                                            onsubmit="return confirm('Yakin ingin menghapus <?php echo e($product->name); ?>?');">
+                                            <?php echo csrf_field(); ?>
+                                            <?php echo method_field('DELETE'); ?>
+                                            <button type="submit"
+                                                class="w-full flex items-center justify-center
                                             <?php echo e($product->stock > 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600'); ?>
 
                                             text-white font-semibold px-2 py-1 rounded transition"
-                                            <?php echo e($product->stock > 0 ? 'disabled' : ''); ?>>
-                                            <i class="fas fa-trash-alt mr-1 text-base"></i>
-                                            <span class="text-sm">Hapus</span>
-                                        </button>
-                                    </form>
+                                                <?php echo e($product->stock > 0 ? 'disabled' : ''); ?>>
+                                                <i class="fas fa-trash-alt mr-1 text-base"></i>
+                                                <span class="text-sm">Hapus</span>
+                                            </button>
+                                        </form>
+                                    <?php endif; ?>
                                     <form action="<?php echo e(route('cart.store')); ?>" method="POST">
                                         <?php echo csrf_field(); ?>
                                         <input type="hidden" name="id" value="<?php echo e($product->id); ?>">

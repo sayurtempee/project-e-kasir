@@ -44,13 +44,15 @@
             @endif
 
             <!-- Tombol Tambah Produk -->
-            <div class="flex justify-end mb-4">
-                <a href="{{ route('product.create') }}"
-                    class="font-semibold py-2 px-4 rounded-lg transition duration-300
+            @if (auth()->user()->role === 'admin')
+                <div class="flex justify-end mb-4">
+                    <a href="{{ route('product.create') }}"
+                        class="font-semibold py-2 px-4 rounded-lg transition duration-300
                        bg-[#1E3A8A] text-white hover:bg-blue-950 hover:border-black hover:text-black">
-                    Tambah Produk
-                </a>
-            </div>
+                        Tambah Produk
+                    </a>
+                </div>
+            @endif
 
             <div class="mb-4">
                 <form action="{{ route('product.index') }}" method="GET" class="flex items-center gap-2">
@@ -66,6 +68,13 @@
                         hover:bg-green-800 hover:text-gray-300 transition duration-300 flex items-center space-x-2">
                         <span>Scan Barcode</span>
                     </button>
+                    @if (auth()->user()->role === 'kasir')
+                        <a href="{{ route('member.create') }}"
+                            class="bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-purple-800 transition duration-300 flex items-center gap-2">
+                            <i class="fas fa-user-plus"></i>
+                            Tambah Member
+                        </a>
+                    @endif
                 </form>
             </div>
 
@@ -164,23 +173,25 @@
                                         </div>
                                     </div>
                                     {{--  end modal-detail  --}}
-                                    <a href="{{ route('product.edit', $product->id) }}"
-                                        class="flex items-center justify-center bg-yellow-400 text-black font-semibold px-2 py-1 rounded hover:bg-yellow-500 transition">
-                                        <i class="fas fa-edit mr-1 text-base"></i> <span class="text-sm">Edit</span>
-                                    </a>
-                                    <form action="{{ route('product.destroy', $product->id) }}" method="POST"
-                                        onsubmit="return confirm('Yakin ingin menghapus {{ $product->name }}?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="w-full flex items-center justify-center
+                                    @if (auth()->user()->role === 'admin')
+                                        <a href="{{ route('product.edit', $product->id) }}"
+                                            class="flex items-center justify-center bg-yellow-400 text-black font-semibold px-2 py-1 rounded hover:bg-yellow-500 transition">
+                                            <i class="fas fa-edit mr-1 text-base"></i> <span class="text-sm">Edit</span>
+                                        </a>
+                                        <form action="{{ route('product.destroy', $product->id) }}" method="POST"
+                                            onsubmit="return confirm('Yakin ingin menghapus {{ $product->name }}?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="w-full flex items-center justify-center
                                             {{ $product->stock > 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600' }}
                                             text-white font-semibold px-2 py-1 rounded transition"
-                                            {{ $product->stock > 0 ? 'disabled' : '' }}>
-                                            <i class="fas fa-trash-alt mr-1 text-base"></i>
-                                            <span class="text-sm">Hapus</span>
-                                        </button>
-                                    </form>
+                                                {{ $product->stock > 0 ? 'disabled' : '' }}>
+                                                <i class="fas fa-trash-alt mr-1 text-base"></i>
+                                                <span class="text-sm">Hapus</span>
+                                            </button>
+                                        </form>
+                                    @endif
                                     <form action="{{ route('cart.store') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="id" value="{{ $product->id }}">

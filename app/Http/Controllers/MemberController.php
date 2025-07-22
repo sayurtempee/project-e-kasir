@@ -51,7 +51,7 @@ class MemberController extends Controller
             'discount_percentage' => $request->discount_percentage ?? 0
         ]);
 
-        return redirect()->route('member.index')->with('success', 'Member berhasil ditambahkan!');
+        return redirect()->route('member.create')->with('success', 'Member berhasil ditambahkan!');
     }
 
     public function show(Member $member)

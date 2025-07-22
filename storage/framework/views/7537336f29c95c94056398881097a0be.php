@@ -17,12 +17,14 @@
             <h1 class="text-3xl font-bold mb-4 text-white">DAFTAR KATEGORI</h1>
 
             <!-- Tombol Tambah Kategori -->
+            <?php if(auth()->user()->role === 'admin'): ?>
             <div class="flex justify-end mb-4">
                 <a href="<?php echo e(route('category.create')); ?>"
                     class="bg-[#1E3A8A] text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-950 hover:text-black transition duration-300">
                     Tambah Kategori
                 </a>
             </div>
+            <?php endif; ?>
 
             <!-- Form Pencarian -->
             <div class="mb-4">
@@ -59,7 +61,9 @@
                             <th class="px-6 py-3 text-left">Kategori</th>
                             <th class="px-6 py-3 text-left">Jumlah Produk</th>
                             <th class="px-6 py-3 text-left">Tanggal Input</th>
-                            <th class="px-6 py-3 text-left">Aksi</th>
+                            <?php if(auth()->user()->role === 'admin'): ?>
+                                <th class="px-6 py-3 text-left">Aksi</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -75,22 +79,24 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-3"><?php echo e($category->created_at->format('d-m-Y')); ?></td>
-                                <td class="px-6 py-3 flex space-x-2">
-                                    <a href="<?php echo e(route('category.edit', $category->id)); ?>"
-                                        class="flex items-center bg-yellow-400 text-black font-semibold px-2 py-1 rounded hover:bg-yellow-500 transition">
-                                        <i class="fas fa-edit mr-1"></i> <span class="text-sm">Edit</span>
-                                    </a>
-                                    <form action="<?php echo e(route('category.destroy', $category->id)); ?>" method="POST"
-                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus <?php echo e($category->name); ?>?');"
-                                        class="inline-block">
-                                        <?php echo csrf_field(); ?>
-                                        <?php echo method_field('DELETE'); ?>
-                                        <button type="submit"
-                                            class="flex items-center bg-red-500 text-white font-semibold px-2 py-1 rounded hover:bg-red-600 transition">
-                                            <i class="fas fa-trash-alt mr-1"></i> <span class="text-sm">Hapus</span>
-                                        </button>
-                                    </form>
-                                </td>
+                                <?php if(auth()->user()->role === 'admin'): ?>
+                                    <td class="px-6 py-3 flex space-x-2">
+                                        <a href="<?php echo e(route('category.edit', $category->id)); ?>"
+                                            class="flex items-center bg-yellow-400 text-black font-semibold px-2 py-1 rounded hover:bg-yellow-500 transition">
+                                            <i class="fas fa-edit mr-1"></i> <span class="text-sm">Edit</span>
+                                        </a>
+                                        <form action="<?php echo e(route('category.destroy', $category->id)); ?>" method="POST"
+                                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus <?php echo e($category->name); ?>?');"
+                                            class="inline-block">
+                                            <?php echo csrf_field(); ?>
+                                            <?php echo method_field('DELETE'); ?>
+                                            <button type="submit"
+                                                class="flex items-center bg-red-500 text-white font-semibold px-2 py-1 rounded hover:bg-red-600 transition">
+                                                <i class="fas fa-trash-alt mr-1"></i> <span class="text-sm">Hapus</span>
+                                            </button>
+                                        </form>
+                                    </td>
+                                <?php endif; ?>
                             </tr>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                             <tr>
