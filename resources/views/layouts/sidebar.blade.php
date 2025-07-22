@@ -119,7 +119,9 @@
                                 x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
                                 class="mt-2 pl-4 space-y-2 origin-top text-white">
                                 <a href="{{ route('member.index') }}" class="block">Daftar Member</a>
-                                <a href="{{ route('member.create') }}" class="block">Tambah Member</a>
+                                @if (auth()->user()->role === 'kasir')
+                                    <a href="{{ route('member.create') }}" class="block">Tambah Member</a>
+                                @endif
                             </div>
                         </div>
                     @endif

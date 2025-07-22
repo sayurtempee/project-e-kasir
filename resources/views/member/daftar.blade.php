@@ -19,6 +19,7 @@
                 DAFTAR MEMBER
             </h1>
 
+            @if (auth()->user()->role === 'kasir')
             <!-- Button Add Member -->
             <div class="flex justify-end mb-4">
                 <a href="{{ route('member.create') }}"
@@ -26,6 +27,7 @@
                     Tambah Member
                 </a>
             </div>
+            @endif
 
             <div class="mb-4">
                 <form action="{{ route('member.index') }}" method="GET" class="flex items-center gap-2">

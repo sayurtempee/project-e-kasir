@@ -119,7 +119,9 @@
                                 x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
                                 class="mt-2 pl-4 space-y-2 origin-top text-white">
                                 <a href="<?php echo e(route('member.index')); ?>" class="block">Daftar Member</a>
-                                <a href="<?php echo e(route('member.create')); ?>" class="block">Tambah Member</a>
+                                <?php if(auth()->user()->role === 'kasir'): ?>
+                                    <a href="<?php echo e(route('member.create')); ?>" class="block">Tambah Member</a>
+                                <?php endif; ?>
                             </div>
                         </div>
                     <?php endif; ?>

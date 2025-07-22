@@ -19,6 +19,7 @@
                 DAFTAR MEMBER
             </h1>
 
+            <?php if(auth()->user()->role === 'kasir'): ?>
             <!-- Button Add Member -->
             <div class="flex justify-end mb-4">
                 <a href="<?php echo e(route('member.create')); ?>"
@@ -26,6 +27,7 @@
                     Tambah Member
                 </a>
             </div>
+            <?php endif; ?>
 
             <div class="mb-4">
                 <form action="<?php echo e(route('member.index')); ?>" method="GET" class="flex items-center gap-2">
