@@ -39,6 +39,17 @@
                 </div>
             @endif
 
+            @if (session('message'))
+                <div x-data="{ show: true }" x-show="show"
+                    class="alert alert-success relative p-4 mb-4 border border-green-400 bg-green-100 text-green-800 rounded transition">
+                    {{ session('message') }}
+                    <button @click="show = false"
+                        class="absolute top-1 right-2 text-green-800 hover:text-green-900 font-bold" aria-label="Close">
+                        &times;
+                    </button>
+                </div>
+            @endif
+
             <div class="overflow-x-auto bg-white rounded-lg shadow-lg border-4 border-white">
                 <form id="cartForm" action="{{ route('cart.bulkAction') }}" method="POST">
                     @csrf
@@ -65,12 +76,9 @@
                                     $grandTotal += $total;
                                 @endphp
                                 <tr class="border-b hover:bg-gray-50">
-                                    <td class="px-6 py-3">
-                                        <label class="inline-flex items-center cursor-pointer">
-                                            <input type="checkbox" name="selected_carts[]" value="{{ $cart->id }}"
-                                                class="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition duration-150">
-                                            <span class="ml-2"></span>
-                                        </label>
+                                    <td class="px-6 py-3 text-center">
+                                        <input type="checkbox" name="selected_carts[]" value="{{ $cart->id }}"
+                                            class="form-checkbox h-5 w-5 text-blue-600">
                                     </td>
                                     <td class="px-6 py-3">
                                         <img src="{{ Storage::url($cart->product->img) }}"
@@ -88,7 +96,7 @@
                                     </td>
                                     <td class="px-6 py-3">{{ $cart->product->name }}</td>
                                     <td class="px-6 py-3">Rp{{ number_format($cart->product->price) }}</td>
-                                    <td class="px-6 py-3">{{ $cart->quantity }}</td>
+                                    <td class="px-6 py-3">{{ $cart->quantity }} {{ $cart->product->stock_unit }}</td>
                                     <td class="px-6 py-3">Rp{{ number_format($total) }}</td>
                                 </tr>
                             @endforeach
@@ -167,7 +175,8 @@
                 <svg id="modal-barcode" class="w-[250px] h-[80px]"></svg>
             </div>
             <div class="mt-4 text-right">
-                <button onclick="closeBarcodeModal()" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                <button onclick="closeBarcodeModal()"
+                    class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
                     Tutup
                 </button>
             </div>

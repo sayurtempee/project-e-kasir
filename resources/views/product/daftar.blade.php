@@ -68,6 +68,8 @@
                         hover:bg-green-800 hover:text-gray-300 transition duration-300 flex items-center space-x-2">
                         <span>Scan Barcode</span>
                     </button>
+                    <input type="text" id="scan-barcode" placeholder="Scan Barcode Menggunakan Mesin"
+                        class="w-full md:w-1/3 px-4 py-2 border border-green-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-800 placeholder:text-green-700 shadow transition duration-300" />
                     @if (auth()->user()->role === 'kasir')
                         <a href="{{ route('member.create') }}"
                             class="bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-purple-800 transition duration-300 flex items-center gap-2">
@@ -78,8 +80,9 @@
                 </form>
             </div>
 
-            <div id="scanner-container" class="hidden mt-4 p-4">
-                <div id="barcode-scanner" class="w-[480px] h-[480px] border rounded mb-4"></div>
+            <div id="scanner-container" class="hidden mx-auto mb-4">
+                <div id="barcode-scanner" class="w-[480px] h-[480px] bg-black rounded-lg overflow-hidden relative">
+                </div>
             </div>
 
             <!-- Tabel Daftar Produk -->
@@ -242,12 +245,20 @@
             @endforeach
         });
 
-        let html5QrCode;
+        {{--  let html5QrCode;  --}}
+        let scanned = false;
+        let quaggaInitialized = false;
 
         function startBarcodeScanner() {
             const scannerContainer = document.getElementById('scanner-container');
             const scannerElement = document.getElementById('barcode-scanner');
             scannerContainer.classList.remove('hidden');
+
+            if (quaggaInitialized) {
+                scanned = false;
+                Quagga.start();
+                return;
+            }
 
             Quagga.init({
                 inputStream: {
@@ -255,7 +266,7 @@
                     type: "LiveStream",
                     target: scannerElement,
                     constraints: {
-                        facingMode: "environment", // pakai kamera belakang
+                        facingMode: "environment",
                         width: {
                             ideal: 480
                         },
@@ -270,19 +281,7 @@
                 },
                 numOfWorkers: navigator.hardwareConcurrency || 2,
                 decoder: {
-                    readers: [
-                        "code_128_reader",
-                        "ean_reader",
-                        "ean_8_reader",
-                        "upc_reader",
-                        "upc_e_reader",
-                        "code_39_reader",
-                        "code_39_vin_reader",
-                        "codabar_reader",
-                        "i2of5_reader",
-                        "2of5_reader",
-                        "code_93_reader"
-                    ]
+                    readers: ["ean_reader", "code_128_reader", "upc_reader"]
                 },
                 locate: true
             }, function(err) {
@@ -291,86 +290,98 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'Gagal menginisialisasi pemindai barcode: ' + err.message,
+                        text: 'Gagal inisialisasi scanner: ' + err.message
                     });
                     return;
                 }
-                Quagga.initialized = true;
+
+                quaggaInitialized = true;
                 Quagga.start();
             });
 
-            Quagga.onProcessed(() => {
-                const preview = document.getElementById('preview');
-                if (preview) {
-                    preview.querySelectorAll('video, canvas').forEach(el => {
-                        el.classList.add('absolute', 'top-0', 'left-0', 'w-full', 'h-full',
-                            'object-cover', '[aspect-ratio:1/1]');
-                    });
-                }
-            });
+            if (!Quagga._onDetectedAdded) {
+                Quagga.onDetected(data => {
+                    if (scanned) return;
 
-            let scanned = false;
-            Quagga.onDetected(function(data) {
-                if (scanned) return;
+                    const barcode = data.codeResult.code;
+                    if (!barcode || barcode.length < 8) return;
 
-                const barcode = data.codeResult.code;
-                if (!barcode || barcode.length !== 13) return; // abaikan jika hasil tidak valid
+                    scanned = true;
+                    console.log("Barcode:", barcode);
 
-                scanned = true;
-                console.log("Barcode ditemukan:", barcode);
-                Quagga.stop();
-                scannerContainer.classList.add('hidden');
-
-                // Kirim barcode ke server
-                fetch("/cart/scan", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute(
-                                'content'),
-                            "X-Requested-With": "XMLHttpRequest"
-                        },
-                        body: JSON.stringify({
-                            barcode: barcode
+                    // Kirim ke server
+                    fetch("/cart/scan", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                    'content'),
+                                "X-Requested-With": "XMLHttpRequest"
+                            },
+                            body: JSON.stringify({
+                                barcode: barcode
+                            })
                         })
-                    })
-                    .then(response => response.json().then(data => ({
-                        status: response.status,
-                        body: data
-                    })))
-                    .then(({
-                        status,
-                        body
-                    }) => {
-                        const productIndexUrl = "{{ route('product.index') }}";
-                        if (status === 200 && body.message) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil',
-                                text: body.message,
-                                timer: 2000,
-                                showConfirmButton: false
-                            }).then(() => {
-                                window.location.href = productIndexUrl;
-                            });
-                        } else {
+                        .then(res => res.json().then(data => ({
+                            status: res.status,
+                            body: data
+                        })))
+                        .then(({
+                            status,
+                            body
+                        }) => {
+                            if (status === 200) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil',
+                                    text: body.message,
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal',
+                                    text: body.message
+                                });
+                            }
+
+                            // Reset untuk scan ulang
+                            setTimeout(() => {
+                                scanned = false;
+                            }, 2000);
+                        })
+                        .catch(err => {
+                            console.error(err);
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Gagal',
-                                text: body.message ||
-                                    'Terjadi kesalahan saat menambahkan produk ke keranjang.',
+                                title: 'Error',
+                                text: 'Gagal mengirim data ke server.'
                             });
-                        }
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Gagal menambahkan produk ke keranjang.',
+                            setTimeout(() => {
+                                scanned = false;
+                            }, 2000);
                         });
-                    });
-            });
+                });
+
+                Quagga._onDetectedAdded = true;
+            }
+
+            // Tambahkan styling video + canvas jika perlu
+            if (!Quagga._onProcessedAdded) {
+                Quagga.onProcessed(() => {
+                    const preview = document.getElementById('barcode-scanner');
+                    if (preview) {
+                        preview.querySelectorAll('video, canvas').forEach(el => {
+                            el.classList.add(
+                                'absolute', 'top-0', 'left-0', 'w-full', 'h-full',
+                                'object-cover', '[aspect-ratio:1/1]'
+                            );
+                        });
+                    }
+                });
+                Quagga._onProcessedAdded = true;
+            }
         }
 
         function toggleModal(id) {
@@ -397,6 +408,59 @@
         function closeBarcodeModal() {
             document.getElementById('barcodeModal').classList.add('hidden');
         }
+
+        document.getElementById('scan-barcode').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const barcode = e.target.value.trim();
+                if (barcode.length > 0) {
+                    fetch("/cart/scan", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                    'content'),
+                                "X-Requested-With": "XMLHttpRequest"
+                            },
+                            body: JSON.stringify({
+                                barcode: barcode
+                            })
+                        })
+                        .then(res => res.json().then(data => ({
+                            status: res.status,
+                            body: data
+                        })))
+                        .then(({
+                            status,
+                            body
+                        }) => {
+                            if (status === 200) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Sukses',
+                                    text: body.message,
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
+                                e.target.value = ''; // kosongkan input
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal',
+                                    text: body.message,
+                                });
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Gagal memproses barcode.',
+                            });
+                        });
+                }
+            }
+        });
     </script>
 </body>
 
