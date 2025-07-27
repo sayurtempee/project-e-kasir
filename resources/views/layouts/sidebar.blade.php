@@ -56,7 +56,7 @@
                     </div>
 
                     <!-- Discount -->
-                    @if (auth()->user()->role === 'admin')
+                    {{--  @if (auth()->user()->role === 'admin')
                         <div x-data="{ open: false }">
                             <button @click="open = !open"
                                 class="w-full bg-white text-blue-800 font-semibold py-2 px-4 rounded flex justify-between items-center">
@@ -73,7 +73,7 @@
                                 <a href="{{ route('discount.create') }}" class="block">Tambah Diskon</a>
                             </div>
                         </div>
-                    @endif
+                    @endif  --}}
                 </div>
             </div>
 
