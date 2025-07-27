@@ -56,24 +56,7 @@
                     </div>
 
                     <!-- Discount -->
-                    <?php if(auth()->user()->role === 'admin'): ?>
-                        <div x-data="{ open: false }">
-                            <button @click="open = !open"
-                                class="w-full bg-white text-blue-800 font-semibold py-2 px-4 rounded flex justify-between items-center">
-                                Diskon
-                                <i class="fas fa-chevron-down transition-transform duration-300"
-                                    :class="{ 'rotate-180': open }"></i>
-                            </button>
-                            <div x-show="open" x-collapse x-transition:enter="transition ease-out duration-300"
-                                x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                                x-transition:leave="transition ease-in duration-200"
-                                x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-                                class="mt-2 pl-4 space-y-2 origin-top text-white">
-                                <a href="<?php echo e(route('discount.index')); ?>" class="block">Kelola Diskon</a>
-                                <a href="<?php echo e(route('discount.create')); ?>" class="block">Tambah Diskon</a>
-                            </div>
-                        </div>
-                    <?php endif; ?>
+                    
                 </div>
             </div>
 
