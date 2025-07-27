@@ -19,6 +19,20 @@
     <div class="w-full max-w-7xl mx-auto bg-blue-950 p-6 rounded-lg shadow-lg">
         <h2 class="text-3xl font-semibold mb-4 text-white">Keranjang Belanja</h2>
 
+        @if (session('success'))
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sukses!',
+                        text: '{{ session('success') }}',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                });
+            </script>
+        @endif
+
         @if ($carts->count() > 0)
             <div class="flex justify-between items-center mb-4">
                 {{-- Pesan Waktu Transaksi --}}
@@ -140,7 +154,11 @@
 
                         <div>
                             <p>Total: Rp{{ number_format($cartTotal) }}</p>
-                            <p>Poin: {{ $diskonPoin }} poin</p>
+                            @if ($diskonPoin)
+                                <p>Poin digunakan: {{ $diskonPoin }} poin</p>
+                                <p>Diskon: {{ $diskonPersen }}%</p>
+                                <p>Potongan: Rp{{ number_format(($cartTotal * $diskonPersen) / 100, 0, ',', '.') }}</p>
+                            @endif
                             <p><strong>Total Bayar: Rp{{ number_format($totalBayar) }}</strong></p>
                         </div>
 

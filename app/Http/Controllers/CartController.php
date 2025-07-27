@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\Log;
 
 class CartController extends Controller
 {
+    private function getDiskonByPoint($point): array
+    {
+        if ($point >= 40 && $point < 50) return [0.4, 40];
+        if ($point >= 30 && $point < 40) return [0.3, 30];
+        if ($point >= 20 && $point < 30) return [0.2, 20];
+        return [0, 0];
+    }
     public function index(Request $request)
     {
         $user = auth()->user();
@@ -25,9 +32,9 @@ class CartController extends Controller
             $cartTotal += $cart->product->price * $cart->quantity;
         }
 
-        // $diskonPersen = 0;
         $diskonPoin = 0;
         $totalDiskon = 0;
+        $diskonPersen = 0;
         $totalBayar = $cartTotal;
         $no_telp = $request->input('no_telp');
         $message = null;
@@ -36,32 +43,27 @@ class CartController extends Controller
             $member = Member::where('no_telp', $no_telp)->first();
 
             if ($member) {
-                if ($member->status !== 'active') {
-                    $message = "Member sudah tidak aktif, diskon tidak berlaku.";
-                } elseif ($member->point > 0) {
-                    // $diskonPersen = $member->discount_percentage;
-                    if ($member->point >= 40 && $member->point < 50) {
-                        $totalDiskon = 0.4;
-                    } elseif ($member->point >= 30 && $member->point < 40) {
-                        $totalDiskon = 0.3;
-                    } elseif ($member->point >= 20 && $member->point < 30) {
-                        $totalDiskon = 0.2;
-                    }
-                    // 30% diskon untuk poin 30
-                    $diskonPoin = $member->point;
-                    $diskonNominal = ($cartTotal * $totalDiskon);
-                    $totalBayar = $cartTotal - $diskonNominal;
+                $simulatedStatus = $member->status;
+                $simulatedPoints = $member->point;
 
-                    // dd($totalBayar, $diskonPoin, $totalDiskon);
+                // Simulasikan aktif sementara jika belanja >= 100rb
+                if ($simulatedStatus === 'inactive' && $cartTotal >= 100000) {
+                    $simulatedStatus = 'active';
                 }
-            } else {
-                $message = "Nomor telepon member tidak ditemukan.";
+
+                if ($simulatedStatus !== 'active') {
+                    $message = "Member sudah tidak aktif, diskon tidak berlaku.";
+                } elseif ($simulatedPoints > 0) {
+                    [$totalDiskon, $diskonPoin] = $this->getDiskonByPoint($simulatedPoints);
+                    $diskonNominal = $cartTotal * $totalDiskon;
+                    $totalBayar = $cartTotal - $diskonNominal;
+                }
+                $diskonPersen = $totalDiskon * 100;
             }
         }
 
-        return view('cart.index', compact('carts', 'cartTotal', 'diskonPoin', 'totalBayar', 'no_telp', 'message'));
+        return view('cart.index', compact('carts', 'cartTotal', 'diskonPoin', 'totalBayar', 'no_telp', 'message', 'diskonPersen'));
     }
-
     /**
      * Tambah produk ke keranjang tanpa mengurangi stok.
      */
@@ -74,8 +76,8 @@ class CartController extends Controller
         }
 
         $cart = Cart::where('product_id', $product->id)
-                    ->where('user_id', auth()->id())
-                    ->first();
+            ->where('user_id', auth()->id())
+            ->first();
 
         if ($cart) {
             // Pastikan total quantity di cart tidak melebihi stok
@@ -147,8 +149,17 @@ class CartController extends Controller
             // Cari member jika no_telp diisi
             if ($no_telp) {
                 $member = Member::where('no_telp', $no_telp)->first();
-                if ($member && $member->point > 0) {
-                    $diskonPoin = $member->point;
+                if ($member) {
+                    // ⬇️ AKTIFKAN MEMBER JIKA BELANJA ≥ 100.000 DAN STATUS MASIH INACTIVE
+                    if ($member->status === 'inactive' && $cartTotal >= 100000) {
+                        $member->status = 'active';
+                        $member->save();
+                    }
+
+                    // Set diskon poin hanya jika member aktif
+                    if ($member->status === 'active' && $member->point > 0) {
+                        $diskonPoin = $member->point;
+                    }
                 }
             }
 
@@ -216,16 +227,33 @@ class CartController extends Controller
                 if ($member) {
                     $earnedPoints = floor($totalBayar / 10000); // 1 poin tiap 10.000
                     $member->point = ($member->point ?? 0) + $earnedPoints - $usedPoints;
+                    $member->last_transaction_at = now(); // <--- Tambahkan baris ini
                     $member->save();
                 }
 
                 DB::commit();
 
-                return redirect()->route('invoice.show', ['ids' => implode(',', $transactionIds)])
-                                 ->with('success', 'Transaksi berhasil!');
+                // Flash message sebelum redirect
+                if ($member && $member->status === 'active' && $usedPoints > 0) {
+                    session()->flash('success', "Transaksi berhasil. Anda menggunakan {$usedPoints} poin untuk potongan " . ($totalDiskon * 100) . "%.");
+                } elseif ($member && $member->status === 'active') {
+                    session()->flash('success', "Transaksi berhasil. Anda adalah member aktif.");
+                } else {
+                    session()->flash('success', 'Transaksi berhasil.');
+                }
+
+                return redirect()->route('invoice.show', ['ids' => implode(',', $transactionIds)]);
             } catch (\Exception $e) {
                 DB::rollBack();
                 return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan saat transaksi: ' . $e->getMessage()]);
+            }
+            // Tambahkan informasi diskon member ke session
+            if ($member && $member->status === 'active' && $diskonPoin > 0) {
+                session()->flash('success', "Diskon member berhasil digunakan. Anda menggunakan {$diskonPoin} poin untuk potongan harga.");
+            } elseif ($member && $member->status === 'active') {
+                session()->flash('success', "Transaksi berhasil. Anda adalah member aktif.");
+            } else {
+                session()->flash('success', 'Transaksi berhasil.');
             }
         }
         return redirect()->route('cart.index');
@@ -258,8 +286,8 @@ class CartController extends Controller
         $userId = Auth::id();
 
         $cart = Cart::where('product_id', $product->id)
-                    ->where('user_id', $userId)
-                    ->first();
+            ->where('user_id', $userId)
+            ->first();
 
         if ($cart) {
             if ($product->stock <= $cart->quantity) {

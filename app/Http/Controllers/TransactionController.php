@@ -71,9 +71,22 @@ class TransactionController extends Controller
         // Cari data member berdasarkan user_id
         $member = Member::where('user_id', auth()->id())->first();
 
+        // Hitung total harga tanpa diskon
+        $totalHarga = $cart->product->price * $cart->quantity;
 
-        // Cek apakah member ada dan aktif
-        if (!$member || $member->status !== 'active') {
+        // Cek apakah member ada
+        if (!$member) {
+            return redirect()->route('cart.index')->with('error', 'Anda belum terdaftar sebagai member.');
+        }
+
+        // AKTIFKAN MEMBER JIKA TIDAK AKTIF DAN TOTAL BELANJA >= 100.000
+        if ($member->status === 'inactive' && $totalHarga >= 100000) {
+            $member->status = 'active';
+            $member->save();
+        }
+
+        // Cek ulang status member setelah kemungkinan diaktifkan
+        if ($member->status !== 'active') {
             return redirect()->route('cart.index')
                 ->with('error', 'Mohon maaf, diskon kadaluarsa. Akun Anda tidak aktif sebagai member.');
         }
@@ -82,7 +95,6 @@ class TransactionController extends Controller
         $discount = $member->discount_percentage ?? 0;
 
         // Hitung total harga dengan diskon
-        $totalHarga = $cart->product->price * $cart->quantity;
         $finalPrice = $totalHarga - ($totalHarga * $discount / 100);
 
         // Simpan transaksi
