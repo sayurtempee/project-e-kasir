@@ -171,6 +171,11 @@ class TransactionController extends Controller
     }
     public function showInvoice(Request $request, $ids)
     {
+        $diskonPoin = session('diskonPoin', 0);
+        $diskonPersen = session('diskonPersen', 0);
+        $cartTotal = session('cartTotal', 0);
+        $totalBayar = session('totalBayar', 0);
+
         $idsArray = explode(',', $ids);
 
         $transactions = Transaction::with(['product.category', 'member'])
@@ -188,7 +193,16 @@ class TransactionController extends Controller
         $paidAmount = $firstTransaction->paid_amount ?? 0;
         $change = $firstTransaction->change ?? 0;
 
-        return view('transaction.invoice', compact('transactions', 'grandTotal', 'paidAmount', 'change'));
+        return view('transaction.invoice', compact(
+            'transactions',
+            'grandTotal',
+            'paidAmount',
+            'change',
+            'diskonPoin',
+            'diskonPersen',
+            'cartTotal',
+            'totalBayar'
+        ));
     }
 
     public function downloadInvoicePdf($ids)
@@ -286,6 +300,15 @@ class TransactionController extends Controller
         $message .= "Nomor   : {$memberPhone}\n";
         $memberName = optional($transactions->first()->member)->name ?? '-';
         $message .= "Member     : {$memberName}\n";
+        $diskonPoin = $transactions->first()->diskon_poin ?? 0;
+        $diskonPersen = $transactions->first()->diskon_persen ?? 0;
+        $cartTotal = $transactions->sum('total_price');
+        $potongan = ($cartTotal * $diskonPersen) / 100;
+        if ($diskonPoin > 0 && $diskonPersen > 0) {
+            $message .= "Poin Digunakan : {$diskonPoin} poin\n";
+            $message .= "Diskon         : " . number_format($diskonPersen, 0) . "%\n";
+            $message .= "Potongan Harga : Rp" . number_format($potongan, 0, ',', '.') . "\n";
+        }
         $message .= "Uang Bayar : Rp" . number_format($paidAmount, 0, ',', '.') . "\n";
         $message .= "SubTOTAL: Rp" . number_format($grandTotal, 0, ',', '.') . "\n";
         $change = $transactions->first()->change ?? 0;

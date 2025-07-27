@@ -62,8 +62,16 @@ class CartController extends Controller
             }
         }
 
+        session([
+            'cartTotal' => $cartTotal,
+            'diskonPoin' => $diskonPoin,
+            'diskonPersen' => $diskonPersen,
+            'totalBayar' => $totalBayar,
+        ]);
+
         return view('cart.index', compact('carts', 'cartTotal', 'diskonPoin', 'totalBayar', 'no_telp', 'message', 'diskonPersen'));
     }
+
     /**
      * Tambah produk ke keranjang tanpa mengurangi stok.
      */

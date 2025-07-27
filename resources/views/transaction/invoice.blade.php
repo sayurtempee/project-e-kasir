@@ -64,28 +64,52 @@
             </tbody>
         </table>
 
-        <div class="mt-2 flex justify-end">
-            <div class="w-full max-w-xs">
+        <div class="mt-4 flex justify-end">
+            <div class="w-full max-w-sm bg-white p-4 rounded-xl shadow-md space-y-2">
+
+                {{-- Info Member --}}
                 @if (isset($transactions[0]->member))
-                    <div class="mb-1 flex justify-between">
-                        <span class="text-gray-600"><strong>Nomor:</strong></span>
+                    <div class="flex justify-between text-sm text-gray-600">
+                        <span class="font-semibold">Nomor:</span>
                         <span class="text-blue-700">{{ $transactions[0]->member->no_telp }}</span>
                     </div>
-                    <div class="mb-1 flex justify-between">
-                        <span class="text-gray-600"><strong>Member:</strong></span>
+                    <div class="flex justify-between text-sm text-gray-600">
+                        <span class="font-semibold">Member:</span>
                         <span class="text-blue-700">{{ $transactions[0]->member->name }}</span>
                     </div>
                 @endif
-                <div class="mb-1 flex justify-between">
-                    <span class="text-gray-600 font-semibold">Uang Dibayar:</span>
+
+                {{-- Diskon Poin --}}
+                @if (isset($diskonPoin) && $diskonPoin > 0)
+                    <div class="flex justify-between text-sm text-gray-600">
+                        <span class="font-semibold">Poin Digunakan:</span>
+                        <span class="text-purple-700">{{ $diskonPoin }} poin</span>
+                    </div>
+                    <div class="flex justify-between text-sm text-gray-600">
+                        <span class="font-semibold">Diskon:</span>
+                        <span class="text-purple-700">{{ number_format($diskonPersen, 0) }}%</span>
+                    </div>
+                    <div class="flex justify-between text-sm text-gray-600">
+                        <span class="font-semibold">Potongan Harga:</span>
+                        <span class="text-purple-700">
+                            Rp{{ number_format(($cartTotal * $diskonPersen) / 100, 0, ',', '.') }}
+                        </span>
+                    </div>
+                @endif
+
+                {{-- Pembayaran --}}
+                <div class="flex justify-between text-sm text-gray-600">
+                    <span class="font-semibold">Uang Dibayar:</span>
                     <span class="text-blue-700">Rp{{ number_format($paidAmount, 0, ',', '.') }}</span>
                 </div>
-                <div class="mb-1 flex justify-between">
-                    <span class="text-gray-600"><strong>SubTotal:</strong></span>
-                    <span class="text-green-700">Rp{{ number_format($grandTotal) }}</span>
+
+                <div class="flex justify-between text-sm text-gray-600">
+                    <span class="font-semibold">SubTotal:</span>
+                    <span class="text-green-700">Rp{{ number_format($grandTotal, 0, ',', '.') }}</span>
                 </div>
-                <div class="flex justify-between">
-                    <span class="text-gray-600"><strong>Kembalian:</strong></span>
+
+                <div class="flex justify-between text-sm text-gray-600">
+                    <span class="font-semibold">Kembalian:</span>
                     <span class="text-red-700">Rp{{ number_format($change, 0, ',', '.') }}</span>
                 </div>
             </div>
@@ -132,6 +156,15 @@
 
                 $message .= str_repeat('-', 47) . "\n";
                 $message .= rightAlign('TOTAL', 'Rp' . number_format($grandTotal, 0, ',', '.')) . "\n";
+                $diskonPoin = $transactions->first()->diskon_poin ?? 0;
+                $diskonPersen = $transactions->first()->diskon_persen ?? 0;
+                $cartTotal = $transactions->sum('total_price');
+                $potongan = ($cartTotal * $diskonPersen) / 100;
+                if ($diskonPoin > 0 && $diskonPersen > 0) {
+                    $message .= "Poin Digunakan : {$diskonPoin} poin\n";
+                    $message .= 'Diskon         : ' . number_format($diskonPersen, 0) . "%\n";
+                    $message .= 'Potongan Harga : Rp' . number_format($potongan, 0, ',', '.') . "\n";
+                }
                 $message .= str_repeat('-', 47) . "\n";
                 $message .= center('Terima kasih atas kunjungan Anda!') . "\n";
                 $message .= center('Barang yang sudah dibeli tidak') . "\n";
