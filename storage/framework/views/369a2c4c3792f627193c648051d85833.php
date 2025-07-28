@@ -109,25 +109,54 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="left"><?php echo e($trx->quantity); ?> <?php echo e($trx->product->stock_unit); ?> x Rp<?php echo e(number_format($trx->product->price)); ?></td>
-                    <td class="right">Rp<?php echo e(number_format($trx->total_price)); ?></td>
+                    <td class="left">
+                        <?php echo e($trx->quantity); ?> <?php echo e($trx->product->stock_unit); ?> x
+                        <span class="bold">Rp<?php echo e(number_format($trx->product->price)); ?></span>
+                        <br>
+                        <span class="text-xs text-gray-500">Harga Asli:
+                            Rp<?php echo e(number_format($trx->product->price * $trx->quantity)); ?></span>
+                    </td>
+                    <td class="right">
+                        Rp<?php echo e(number_format($trx->total_price)); ?>
+
+                        <br>
+                        <span class="text-xs text-gray-500">Setelah Diskon</span>
+                    </td>
                 </tr>
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </table>
 
         <div class="line"></div>
         <table>
+            <?php if(!empty($diskonPoin) && $diskonPoin > 0): ?>
+                <tr>
+                    <td class="left bold">Poin Digunakan</td>
+                    <td class="right bold"><?php echo e($diskonPoin); ?> poin</td>
+                </tr>
+            <?php endif; ?>
+            <?php if(!empty($diskonPersen) && $diskonPersen > 0): ?>
+                <tr>
+                    <td class="left bold">Diskon</td>
+                    <td class="right bold"><?php echo e($diskonPersen); ?>%</td>
+                </tr>
+            <?php endif; ?>
+            <?php if(!empty($potongan) && $potongan > 0): ?>
+                <tr>
+                    <td class="left bold">Potongan Harga</td>
+                    <td class="right bold">Rp<?php echo e(number_format($potongan, 0, ',', '.')); ?></td>
+                </tr>
+            <?php endif; ?>
             <tr>
                 <td class="bold left">UANG DIBAYAR</td>
                 <td class="bold right">Rp<?php echo e(number_format($paidAmount, 0, ',', '.')); ?></td>
             </tr>
             <tr>
                 <td class="bold left">SUBTOTAL</td>
-                <td class="bold right">Rp<?php echo e(number_format($totalBayar)); ?></td>
+                <td class="bold right">Rp<?php echo e(number_format($totalBayar, 0, ',', '.')); ?></td>
             </tr>
             <tr>
                 <td class="bold left">KEMBALIAN</td>
-                <td class="bold right">Rp<?php echo e(number_format($change)); ?></td>
+                <td class="bold right">Rp<?php echo e(number_format($change, 0, ',', '.')); ?></td>
             </tr>
         </table>
 

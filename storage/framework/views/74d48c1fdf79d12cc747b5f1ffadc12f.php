@@ -150,6 +150,7 @@
 
                     $message .= "{$namaProduk}\n";
                     $message .= rightAlign("{$qty} x Rp{$harga}", "Rp{$subtotal}") . "\n";
+                    $message .= "Harga Asli: Rp{$trx->product->price}\n";
                 }
 
                 $message .= str_repeat('-', 47) . "\n";
