@@ -10,7 +10,15 @@ class Transaction extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'product_id', 'quantity', 'total_price', 'member_id', 'paid_amount', 'change',
+        'user_id',
+        'product_id',
+        'quantity',
+        'total_price',
+        'member_id',
+        'paid_amount',
+        'change',
+        'diskon_poin',
+        'diskon_persen',
     ];
 
     // Relasi ke model Product

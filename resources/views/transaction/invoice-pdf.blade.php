@@ -109,25 +109,53 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="left">{{ $trx->quantity }} {{ $trx->product->stock_unit }} x Rp{{ number_format($trx->product->price) }}</td>
-                    <td class="right">Rp{{ number_format($trx->total_price) }}</td>
+                    <td class="left">
+                        {{ $trx->quantity }} {{ $trx->product->stock_unit }} x
+                        <span class="bold">Rp{{ number_format($trx->product->price) }}</span>
+                        <br>
+                        <span class="text-xs text-gray-500">Harga Asli:
+                            Rp{{ number_format($trx->product->price * $trx->quantity) }}</span>
+                    </td>
+                    <td class="right">
+                        Rp{{ number_format($trx->total_price) }}
+                        <br>
+                        <span class="text-xs text-gray-500">Setelah Diskon</span>
+                    </td>
                 </tr>
             @endforeach
         </table>
 
         <div class="line"></div>
         <table>
+            @if (!empty($diskonPoin) && $diskonPoin > 0)
+                <tr>
+                    <td class="left bold">Poin Digunakan</td>
+                    <td class="right bold">{{ $diskonPoin }} poin</td>
+                </tr>
+            @endif
+            @if (!empty($diskonPersen) && $diskonPersen > 0)
+                <tr>
+                    <td class="left bold">Diskon</td>
+                    <td class="right bold">{{ $diskonPersen }}%</td>
+                </tr>
+            @endif
+            @if (!empty($potongan) && $potongan > 0)
+                <tr>
+                    <td class="left bold">Potongan Harga</td>
+                    <td class="right bold">Rp{{ number_format($potongan, 0, ',', '.') }}</td>
+                </tr>
+            @endif
             <tr>
                 <td class="bold left">UANG DIBAYAR</td>
                 <td class="bold right">Rp{{ number_format($paidAmount, 0, ',', '.') }}</td>
             </tr>
             <tr>
                 <td class="bold left">SUBTOTAL</td>
-                <td class="bold right">Rp{{ number_format($totalBayar) }}</td>
+                <td class="bold right">Rp{{ number_format($totalBayar, 0, ',', '.') }}</td>
             </tr>
             <tr>
                 <td class="bold left">KEMBALIAN</td>
-                <td class="bold right">Rp{{ number_format($change) }}</td>
+                <td class="bold right">Rp{{ number_format($change, 0, ',', '.') }}</td>
             </tr>
         </table>
 

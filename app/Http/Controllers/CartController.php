@@ -52,7 +52,7 @@ class CartController extends Controller
                 }
 
                 if ($simulatedStatus !== 'active') {
-                    $message = "Member sudah tidak aktif, diskon tidak berlaku.";
+                    $message = "Member sudah tidak aktif, diskon tidak berlaku. untuk mengaktifkan harus membeli barang seharga 100K";
                 } elseif ($simulatedPoints > 0) {
                     [$totalDiskon, $diskonPoin] = $this->getDiskonByPoint($simulatedPoints);
                     $diskonNominal = $cartTotal * $totalDiskon;
@@ -223,6 +223,8 @@ class CartController extends Controller
                         'total_price' => $finalPrice,
                         'paid_amount' => $paidAmount,
                         'change' => $change,
+                        'diskon_poin' => $usedPoints,
+                        'diskon_persen' => $totalDiskon * 100,
                     ]);
 
                     $transactionIds[] = $transaction->id;

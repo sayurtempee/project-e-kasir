@@ -209,7 +209,7 @@ class TransactionController extends Controller
     {
         $idsArray = explode(',', $ids);
 
-        $transactions = Transaction::with('product.category')
+        $transactions = Transaction::with(['product.category', 'member'])
             ->where('user_id', auth()->id())
             ->whereIn('id', $idsArray)
             ->get();
@@ -232,13 +232,16 @@ class TransactionController extends Controller
         $paidAmount = $transactions->first()->paid_amount ?? 0;
         $change = $transactions->first()->change ?? 0;
 
+        // Ambil diskon dari transaksi pertama
+        $diskonPoin = $transactions->first()->diskon_poin ?? 0;
+        $diskonPersen = $transactions->first()->diskon_persen ?? 0;
+
+        // Hitung potongan harga
+        $potongan = ($subtotal * $diskonPersen) / 100;
+
         // Hitung total bayar (subtotal - diskon total)
-        $totalBayar = $subtotal - ($subtotal - $transactions->sum('total_price'));
-
-        // Atau lebih mudah, langsung total_price
         $totalBayar = $transactions->sum('total_price');
-
-        $grandTotal = $totalBayar; // biar konsisten
+        $grandTotal = $totalBayar;
 
         $pdf = Pdf::loadView('transaction.invoice-pdf', compact(
             'transactions',
@@ -248,7 +251,10 @@ class TransactionController extends Controller
             'totalBayar',
             'paidAmount',
             'memberName',
-            'memberPhone'
+            'memberPhone',
+            'diskonPoin',
+            'diskonPersen',
+            'potongan'
         ));
 
         return $pdf->download('struk-pembelian.pdf');
@@ -300,10 +306,14 @@ class TransactionController extends Controller
         $message .= "Nomor   : {$memberPhone}\n";
         $memberName = optional($transactions->first()->member)->name ?? '-';
         $message .= "Member     : {$memberName}\n";
+        $message .= "Harga Asli: Rp. " . number_format($trx->product->price, 0, ',', '.') . "\n";
         $diskonPoin = $transactions->first()->diskon_poin ?? 0;
         $diskonPersen = $transactions->first()->diskon_persen ?? 0;
-        $cartTotal = $transactions->sum('total_price');
-        $potongan = ($cartTotal * $diskonPersen) / 100;
+        $subtotal = 0;
+        foreach ($transactions as $trx) {
+            $subtotal += $trx->product->price * $trx->quantity;
+        }
+        $potongan = ($subtotal * $diskonPersen) / 100;
         if ($diskonPoin > 0 && $diskonPersen > 0) {
             $message .= "Poin Digunakan : {$diskonPoin} poin\n";
             $message .= "Diskon         : " . number_format($diskonPersen, 0) . "%\n";
